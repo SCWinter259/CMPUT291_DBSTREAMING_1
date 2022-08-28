@@ -2,7 +2,7 @@ import sqlite3
 from login import login_screen
 from search import search
 from watch import start_watch, end_watch
-from session import start_session, end_session
+from sessions import start_session, end_session
 
 connection = None
 cursor = None

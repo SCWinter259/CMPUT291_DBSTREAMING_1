@@ -55,4 +55,4 @@ Editors should be able to perform the following actions:
 - **String matching**: Except the password which are case sensitive, all other string matches (including id, name, title, etc) are case-insnsitive. This means the keyword "Spiderman" will match spiderman,
   SPIDERMAN, and SpiderMan, and you cannot make any assumption on the case of the strings in the database. The database can have strings in uppercase, lowercase or any mixed format.
 - **Error checking**: Every good programmer should do some basic error checking to make sure the data entered is correct. Your system should not break down when the user makes a mistakes.
-- **Security**: Must counter SQL injection attackes and make the password non-visible at the time of typing 
+- **Security**: Must counter SQL injection attackes and make the password non-visible at the time of typing.
