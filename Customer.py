@@ -23,13 +23,22 @@ class Customer:
         pass
 
     def login(self):
+        '''
+        starts a session (and maybe do something else)
+        '''
         pass
 
     def logout(self):
+        '''
+        ends a session (and maybe do something else)
+        '''
         pass
 
     def signup(self):
         pass
+
+    def is_customer(self):
+        return True
 
     def get_cid(self):
         return self.cid
