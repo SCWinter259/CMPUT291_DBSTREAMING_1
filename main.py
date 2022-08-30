@@ -1,6 +1,8 @@
 import sqlite3
+from Cache import Cache
 import config
 from Functions import*
+from SysStack import SysStack
 from Customer import Customer
 from Editor import Editor
 from Movie import Movie
@@ -26,20 +28,13 @@ def main():
     # remember to have a back function
     # exit is only available when not logged in
 
-    # while authorized == False (still in login screen)
-
-    user = None
-    while user == None:
-        user = login_screen()
-    # if user is customer
-    if user.is_customer() == True:
-        # TODO: start a session
-        pass
-    # if user is editor
-    else:
-        pass
-
-    # try defining stage_code, indicating where the back() function might bring the user to
-    # 1. 
+    stack = SysStack()
+    frame = "begin"
+    cache_obj = Cache()
+    
+    while(stack.see_stack() != None):
+        stack.control(frame)
+        print(stack.see_stack())
+        frame = executioner(frame, cache_obj)
 
 main()
