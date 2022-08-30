@@ -6,19 +6,82 @@ from Editor import Editor
 from Movie import Movie
 from MoviePeople import MoviePeople
 from Session import Session
+from Cache import Cache
 
-def back(stage_code):
+def executioner(func_name, cache_obj):
     '''
-    Changes the stage code of the function it's running in. The function itself has
-    to redirect the user according to the stage code
+    Find the function name, execute the function. Find in arguments to see if the
+    function takes parameter or not. If yes, it takes the cache object.
     '''
-    return stage_code - 1
+    functions = {
+        "begin": begin,
+        "login": login,
+        "register": register,
+        None: None
+    }
 
-def next(stage_code):
+    arguments = {
+        "begin": False,
+        "login": True,
+        "register": False,
+        None: None
+    }
+
+    if arguments[func_name] == True:
+        print("debug 1")
+        return functions[func_name](cache_obj)
+    else:
+        print("debug 2")
+        return functions[func_name]()
+
+def begin():
     '''
-    Similar to back, but increment the stage code
+    First screen: user choose to login or register
     '''
-    return stage_code + 1
+    print("Enter 0 to exit")
+    print("Enter 1 to login")
+    print("Enter 2 to register")
+    choice = input("Enter your choice: ")
+
+    if choice == "0":
+        print("Exiting the program")
+        exit()
+    elif choice == "1":
+        return "login"
+    elif choice == "2":
+        return "register"
+    else:
+        print("Invalid choice")
+        return "begin"
+
+def login(cache_obj):
+    '''
+    Second screen 1: promt user to login
+    '''
+    print("Login to your account")
+    user_id = input("Please enter your ID: ")
+    password = getpass.getpass("Enter your password: ")
+    customer = find_customer(user_id, password)
+    editor = find_editor(user_id, password)
+    if customer != None:
+        print("Welcome " + customer.get_name())
+        cache_obj.set_user(customer)
+        # TODO: return next function name
+        return None
+    elif editor != None:
+        print("Welcome editor" + editor.get_eid())
+        cache_obj.set_user(editor)
+        # TODO: return next function name
+        return None
+    else:
+        print("Sorry, we could not find such account")
+        return "begin"
+
+def register():
+    '''
+    Second screen 2: promt user to register
+    '''
+    pass
 
 def login_screen():
     '''
@@ -26,9 +89,6 @@ def login_screen():
     Return a customer object when logged in as customer, 
     an editor object when logged in as editor
     Return None if no one logged in (fail to authenticate or just registered)
-    Stage code: 
-    1. The promt where user choose to login or register
-    2. Either the login part or signup part
     '''
     print("Enter 0 to exit")
     print("Enter 1 to login")
