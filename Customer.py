@@ -34,9 +34,6 @@ class Customer:
         '''
         pass
 
-    def signup(self):
-        pass
-
     def is_customer(self):
         return True
 

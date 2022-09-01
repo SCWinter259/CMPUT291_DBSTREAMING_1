@@ -31,10 +31,23 @@ def main():
     stack = SysStack()
     frame = "begin"
     cache_obj = Cache()
+    stack.control(frame)
     
-    while(stack.see_stack() != None):
-        stack.control(frame)
+    while(stack.peek() != None):
         print(stack.see_stack())
         frame = executioner(frame, cache_obj)
+        # ask user if they want to go back
+        # we have to guarantee that a logged in user can't simply go back. They have to logout.
+        if len(stack.see_stack()) > 3:
+            decision = input("Do you want to go back? Enter 'y' to go back, any other character to continue: ")
+            if decision == "y":
+                stack.remove()
+                frame = stack.peek()
+        stack.control(frame)
+    print("None returned. No next frame.")
 
 main()
+
+# to recreate the database:
+# sqilte3 [db name] < prj-tables.sql
+# sqlite3 [db name] < project1_data.sql
