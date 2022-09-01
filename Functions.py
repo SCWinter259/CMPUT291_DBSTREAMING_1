@@ -8,6 +8,7 @@ from MoviePeople import MoviePeople
 from Session import Session
 from Cache import Cache
 
+# functions that control the program on the whole
 def executioner(func_name, cache_obj):
     '''
     Find the function name, execute the function. Find in arguments to see if the
@@ -17,6 +18,8 @@ def executioner(func_name, cache_obj):
         "begin": begin,
         "login": login,
         "register": register,
+        "customer screen": customer_screen,
+        "editor screen": editor_screen,
         None: None
     }
 
@@ -24,16 +27,17 @@ def executioner(func_name, cache_obj):
         "begin": False,
         "login": True,
         "register": False,
+        "customer screen": True,
+        "editor screen": True,
         None: None
     }
 
     if arguments[func_name] == True:
-        print("debug 1")
         return functions[func_name](cache_obj)
     else:
-        print("debug 2")
         return functions[func_name]()
 
+# frame functions
 def begin():
     '''
     First screen: user choose to login or register
@@ -66,13 +70,14 @@ def login(cache_obj):
     if customer != None:
         print("Welcome " + customer.get_name())
         cache_obj.set_user(customer)
+        # start the session
         # TODO: return next function name
-        return None
+        return "customer screen"
     elif editor != None:
         print("Welcome editor" + editor.get_eid())
         cache_obj.set_user(editor)
         # TODO: return next function name
-        return None
+        return "editor screen"
     else:
         print("Sorry, we could not find such account")
         return "begin"
@@ -81,54 +86,44 @@ def register():
     '''
     Second screen 2: promt user to register
     '''
-    pass
+    print("Register account")
+    user_id = input("Please enter your ID: ")
+    password = input("Enter your password: ")
+    if find_customer(user_id, None) != None:
+        print("This user ID has already existed. Please choose a different one")
+        return "register"
+    elif len(user_id) > 4:
+        print("Your ID cannot exceed 4 characters!")
+        return "register"
+    else:
+        name = input("Please enter your name: ")
+        insert_customer(user_id, name, password)
+        return "begin"
 
-def login_screen():
+def customer_screen(cache_obj):
     '''
-    This function controls the login screen
-    Return a customer object when logged in as customer, 
-    an editor object when logged in as editor
-    Return None if no one logged in (fail to authenticate or just registered)
+    First screen for customers when logged in
     '''
-    print("Enter 0 to exit")
-    print("Enter 1 to login")
-    print("Enter 2 to register")
-    choice = input("Enter your choice: ")
-    
-    if choice == "0":       # Exit the program
-        print("Exiting the program")
-        exit()
-    elif choice == "1":     # login
-        print("Login to your account")
-        user_id = input("Please enter your ID: ")
-        password = getpass.getpass("Enter your password: ")
-        customer = find_customer(user_id, password)
-        editor = find_editor(user_id, password)
-        if customer != None:
-            print("Welcome " + customer.get_name())
-            return customer
-        elif editor != None:
-            print("Welcome editor" + editor.get_eid())
-            return editor
-        else:
-            print("Sorry, we could not find such account")
-            return None
-    elif choice == "2":     # Register
-        print("Register account")
-        user_id = input("Please enter your ID: ")
-        password = input("Enter your password: ")
-        # TODO
-    else:       # invalid input
-        print("Please enter a valid choice")
-        return None
+    return None
 
+def editor_screen(cache_obj):
+    '''
+    First screen for editors when logged in
+    '''
+    return None
+
+# below are support functions
 def find_customer(cid, pwd):
     '''
     Find in table "customers" using cid and pwd
     Return customer object if customer exists, None otherwise
     '''
-    config.cursor.execute("SELECT * FROM customers WHERE cid=:id AND pwd=:pass",
-                            {"id":cid, "pass":pwd})
+    if pwd != None:     # find customer using both cid and pwd
+        config.cursor.execute("SELECT * FROM customers WHERE cid=:id AND pwd=:pass",
+                                {"id":cid, "pass":pwd})
+    else:       # find customer using only cid
+        config.cursor.execute("SELECT * FROM customers WHERE cid=:id",
+                            {"id":cid})
     user = config.cursor.fetchone()
     if user != None:
         customer = Customer()
@@ -144,8 +139,12 @@ def find_editor(eid, pwd):
     Find in table "editors" using eid and pwd
     Return editor object if editor exists, None otherwise
     '''
-    config.cursor.execute("SELECT * FROM editors WHERE eid=:id AND pwd=:pass",
-                            {"id":eid, "pass":pwd})
+    if pwd != None:     # find editor using both eid and pwd
+        config.cursor.execute("SELECT * FROM editors WHERE eid=:id AND pwd=:pass",
+                                {"id":eid, "pass":pwd})
+    else:       # find editor using only eid
+        config.cursor.execute("SELECT * FROM editors WHERE eid=:id",
+                                {"id":eid})
     user = config.cursor.fetchone()
     if user != None:
         editor = Editor()
@@ -154,3 +153,13 @@ def find_editor(eid, pwd):
         return editor
     else:
         return None
+
+def insert_customer(cid, name, pwd):
+    '''
+    A function to add new customer into the database
+    Does not return anything
+    '''
+    config.cursor.execute("INSERT INTO customers VALUES (:id, :name, :pass)",
+                                    {"id":cid, "name":name, "pass":pwd})
+    config.connection.commit()
+    print("Customer " + cid + " registered successfully")
