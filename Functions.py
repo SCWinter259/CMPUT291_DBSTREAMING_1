@@ -71,12 +71,16 @@ def login(cache_obj):
         print("Welcome " + customer.get_name())
         cache_obj.set_user(customer)
         # start the session
-        # TODO: return next function name
+        session = Session()
+        session.set_cid(customer.get_cid())
+        session.start()
+        cache_obj.set_session(session)
+        
         return "customer screen"
     elif editor != None:
         print("Welcome editor" + editor.get_eid())
         cache_obj.set_user(editor)
-        # TODO: return next function name
+        
         return "editor screen"
     else:
         print("Sorry, we could not find such account")
@@ -104,7 +108,8 @@ def customer_screen(cache_obj):
     '''
     First screen for customers when logged in
     '''
-    return None
+    search_str = input("Search for a movie: ")
+
 
 def editor_screen(cache_obj):
     '''
@@ -163,3 +168,90 @@ def insert_customer(cid, name, pwd):
                                     {"id":cid, "name":name, "pass":pwd})
     config.connection.commit()
     print("Customer " + cid + " registered successfully")
+
+def search(search_string):
+    # TODO: move this into Customer object
+    '''
+    Takes in the user search string. Retrieves all movies with any of the
+    keywords in title, cast member name, cast member role.
+    Results are ordered based on the number of matching keywords, from the most
+    to the least.
+    Returns a list of Movie objects.
+    '''
+    # temp is a dictionary used to store results in the form mid: number of matches
+    # the items will then be sorted later after added into a list
+    temp = {}
+    # split the string into keywords
+    keywords = search_string.split()
+    # search word by word
+    for word in keywords:
+        word = '%' + word + '%'
+        results = search_engine(word)
+        for mid in results:
+            # if mid is in not in dictionary, add new item
+            if temp.get(mid) == None:
+                temp[mid] = 0
+            # if mid is in dictionary, increment the value 
+            else:
+                temp[mid] = temp[mid] + 1
+    
+    # turns dict into list. Format is now [(key, value)]
+    temp_list = temp.items()
+    temp_list.sort(key=lambda x: x[1], reversed=True)   # sort the list
+    # add to return list
+    movie_list = []
+    for item in temp_list:
+        movie = find_movie(item[0])
+        movie_list.append(movie)
+
+    return movie_list
+
+def search_engine(word):
+    '''
+    Takes a keyword as input. Search for an mid with that keyword in
+    title, cast member name, or cast member role
+    Returns a list of mids
+    '''
+    mid_list = []
+    # search in title
+    config.cursor.execute('''SELECT mid FROM movies
+                                WHERE title LIKE :word COLLATE NOCASE''',
+                                {"word": word})
+    results = config.cursor.fetchall()
+    for result in results:
+        mid_list.append(result[0])
+    # search in cast member names
+    config.cursor.execute('''SELECT mid FROM casts c, moviePeople m
+                                WHERE c.pid = m.pid
+                                AND m.name LIKE :word COLLATE NOCASE''',
+                                {"word": word})
+    results = config.cursor.fetchall()
+    for result in results:
+        mid_list.append(result[0])
+    # search in cast member role
+    config.cursor.execute('''SELECT mid FROM casts
+                                WHERE role LIKE :word COLLATE NOCASE''',
+                                {"word": word})
+    results = config.cursor.fetchall()
+    for result in results:
+        mid_list.append(result[0])
+
+    return mid_list
+
+def find_movie(mid):
+    '''
+    Find a movie based on provided mid.
+    Returns a Movie object if Movie exists, None otherwise
+    '''
+    config.cursor.execute('''SELECT * FROM movies WHERE mid = :mid''',
+                                {"mid": mid})
+    info = config.cursor.fetchone()
+    if info != None:
+        movie = Movie()
+        movie.set_mid(info[0])
+        movie.set_title(info[1])
+        movie.set_year(info[2])
+        movie.set_runtime(info[3])
+        return movie
+    else:
+        return None
