@@ -71,12 +71,16 @@ def login(cache_obj):
         print("Welcome " + customer.get_name())
         cache_obj.set_user(customer)
         # start the session
-        # TODO: return next function name
+        session = Session()
+        session.set_cid(customer.get_cid())
+        session.start()
+        cache_obj.set_session(session)
+        
         return "customer screen"
     elif editor != None:
         print("Welcome editor" + editor.get_eid())
         cache_obj.set_user(editor)
-        # TODO: return next function name
+        
         return "editor screen"
     else:
         print("Sorry, we could not find such account")
@@ -104,7 +108,8 @@ def customer_screen(cache_obj):
     '''
     First screen for customers when logged in
     '''
-    return None
+    search_str = input("Search for a movie: ")
+
 
 def editor_screen(cache_obj):
     '''
@@ -163,3 +168,9 @@ def insert_customer(cid, name, pwd):
                                     {"id":cid, "name":name, "pass":pwd})
     config.connection.commit()
     print("Customer " + cid + " registered successfully")
+
+def search(search_string):
+    '''
+    Takes in the user search string. Retrieves all movies with any of the
+    keywords in title, cast member name, cast member role
+    '''
