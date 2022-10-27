@@ -233,6 +233,7 @@ def follow(cid, mid): #DONE
     if len(followed) == 0:
         cursor.execute('''INSERT INTO follows VALUES (:cid, :person_id)''',
                             {"cid":cid, "person_id":person_id[0]})
+        connection.commit()
         print("Followed " + name + '!')
     else:
         print("You have already followed this person!")
@@ -465,6 +466,7 @@ def end_watch(sid, cid, mid, start_time): #DONE
     
     cursor.execute('''INSERT INTO watch VALUES (:sid, :cid, :mid, :time_watched)''',
                     {"sid":sid, "cid":cid, "mid": mid, "time_watched":time_watched})
+    connection.commit()
     print("Your watch has ended")
 
 def end_session(sid, mid, start_time): #DONE
