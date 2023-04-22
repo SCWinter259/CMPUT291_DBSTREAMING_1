@@ -1,13 +1,13 @@
 import sqlite3
-from Cache import Cache
-import config
-from Functions import*
-from SysStack import SysStack
-from Customer import Customer
-from Editor import Editor
-from Movie import Movie
-from MoviePeople import MoviePeople
-from Session import Session
+from System.Cache import Cache
+import System.config as config
+from Functions.Functions import*
+from System.SysStack import SysStack
+from BaseClasses.Customer import Customer
+from BaseClasses.Editor import Editor
+from BaseClasses.Movie import Movie
+from BaseClasses.MoviePeople import MoviePeople
+from BaseClasses.Session import Session
 
 def get_path():
     #path = input("Please enter your path: ")
@@ -15,10 +15,10 @@ def get_path():
     return path
 
 def connect(path):
-    config.connection = sqlite3.connect(path)
-    config.cursor = config.connection.cursor()
-    config.cursor.execute(' PRAGMA foreign_keys=ON; ')
-    config.connection.commit()
+    System.config.connection = sqlite3.connect(path)
+    System.config.cursor = System.config.connection.cursor()
+    System.config.cursor.execute(' PRAGMA foreign_keys=ON; ')
+    System.config.connection.commit()
 
 def main():
     path = get_path()
@@ -49,5 +49,5 @@ def main():
 main()
 
 # to recreate the database:
-# sqilte3 [db name] < prj-tables.sql
+# sqlite3 [db name] < prj-tables.sql
 # sqlite3 [db name] < project1_data.sql

@@ -1,4 +1,4 @@
-import config
+import System.config as config
 import sqlite3
 
 class Session:
