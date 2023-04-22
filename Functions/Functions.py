@@ -1,12 +1,12 @@
 import getpass
-import config
+import System.config as config
 #from main import connection, cursor
-from Customer import Customer
-from Editor import Editor
-from Movie import Movie
-from MoviePeople import MoviePeople
-from Session import Session
-from Cache import Cache
+from BaseClasses.Customer import Customer
+from BaseClasses.Editor import Editor
+from BaseClasses.Movie import Movie
+from BaseClasses.MoviePeople import MoviePeople
+from BaseClasses.Session import Session
+from System.Cache import Cache
 
 # functions that control the program on the whole
 def executioner(func_name, cache_obj):
