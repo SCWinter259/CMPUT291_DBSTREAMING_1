@@ -21,14 +21,10 @@ class Editor:
     def is_customer(self):
         return False
 
-    def get_eid(self):
-        return self.eid
+    # getters
+    def get_eid(self): return self.eid
+    def get_pwd(self): return self.pwd
 
-    def get_pwd(self):
-        return self.pwd
-
-    def set_eid(self, eid):
-        self.eid = eid
-
-    def set_pwd(self, pwd):
-        self.pwd = pwd
+    # setters
+    def set_eid(self, eid): self.eid = eid
+    def set_pwd(self, pwd): self.pwd = pwd
