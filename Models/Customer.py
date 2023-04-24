@@ -37,20 +37,12 @@ class Customer:
     def is_customer(self):
         return True
 
-    def get_cid(self):
-        return self.cid
-    
-    def get_name(self):
-        return self.name
+    # getters
+    def get_cid(self): return self.cid
+    def get_name(self): return self.name
+    def get_pwd(self): return self.pwd
 
-    def get_pwd(self):
-        return self.pwd
-
-    def set_cid(self, cid):
-        self.cid = cid
-
-    def set_name(self, name):
-        self.name = name
-
-    def set_pwd(self, pwd):
-        self.pwd = pwd
+    # setters
+    def set_cid(self, cid): self.cid = cid
+    def set_name(self, name): self.name = name
+    def set_pwd(self, pwd): self.pwd = pwd
