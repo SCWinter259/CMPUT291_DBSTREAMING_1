@@ -1,12 +1,9 @@
-import System.config as config
-import sqlite3
-
 class Session:
     def __init__(self):
         self.sid = None
         self.cid = None
-        self.sdate = None
-        self.stime = None       # stime is a special variable, born just for the sake of calculation
+        self.stime = None
+        self.etime = None
         self.duration = None
 
     def start(self):
@@ -19,15 +16,15 @@ class Session:
         pass
 
     # getters
-    def get_sid(self): return self.sid
-    def get_cid(self): return self.cid
-    def get_sdate(self): return self.sdate
-    def get_stime(self): return self.stime
-    def get_duration(self): return self.duration
+    def get_sid(self) -> int: return self.sid
+    def get_cid(self) -> str: return self.cid
+    def get_stime(self) -> str: return self.stime
+    def get_etime(self) -> str: return self.etime
+    def get_duration(self) -> int: return self.duration
 
     # setters
-    def set_sid(self, sid): self.sid = sid
-    def set_cid(self, cid): self.cid = cid
-    def set_sdate(self, sdate): self.sdate = sdate
-    def set_stime(self, stime): self.stime = stime
-    def set_duration(self, duration): self.duration = duration
+    def set_sid(self, sid:int): self.sid = sid
+    def set_cid(self, cid:str): self.cid = cid
+    def set_stime(self, stime:str): self.stime = stime
+    def set_etime(self, etime:str): self.etime = etime
+    def set_duration(self, duration:int): self.duration = duration
