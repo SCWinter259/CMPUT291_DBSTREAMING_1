@@ -11,7 +11,7 @@ The "Legacy Code" folder is actually just the Old Version broken up into differe
 
 This project is currently going through an overhaul for better code quality and to fix last version's issues. The old version, despite taking up lots of effort, had bad planning because we had to accomodate the assignment deadline. The bugs were beyond repair.
 
-In this newer version, I decided to use OOP and pay more attention to code quality and readability. Unlike the last version, this one is a solo work.
+In this newer version, I combine the priciples of Object Oriented Programming and the use of functions. We use a more structured Model-View-Controller (MVC) pattern to control the logic. Type notation is introduced, and two BASH scripts for git automation and database creation automation are added. This version is also developed via Github and has (or will have) a Wiki and a backlog.
 
 ## Project Specifications
 
@@ -46,8 +46,7 @@ After a successful login, customers should be able to perform all of the followi
    the largest number of keywords listed on top. If there are more than 5 matching movies, at most 5 matches will be shown at a time, letting the user select a movie or see more matches. The customer
    should be able to select a movie and see more information about the movie including the cast members and the number of customers who have watched it (the difinition of watched in this project is
    having watched more than half of the duration of the movie). On a movie screen, the customer should have the option to (1) select a cast member and follow it, and to (2) start watching the movie.
-3. ***End watching a movie***: The customer should be able to end a movie being watched. If the customer is watching multiple movies, there should be an option to select any of them and end it. The
-   duration watched should be set to the time passed in minutes from the time it started until the current time. The duration watched cannot exceed the duration of the movie.
+3. ***End watching a movie***: The customer should be able to end a movie being watched. The duration watched should be set to the time passed in minutes from the time it started until the current time. The duration      watched cannot exceed the duration of the movie.
 4. ***End the session***: The user should be able to end the current session. The duration should be set in minutes to the time passed in minutes from the time the session started until the current time.
    If the customer has been watching any movies, those will end and the duration watched will be recorded. Again the duration watched cannot exceed the duration of the movie.
 
