@@ -18,13 +18,12 @@ class Editor:
     def signup(self):
         pass
 
-    def is_customer(self):
-        return False
+    def is_customer(self) -> bool: return False
 
     # getters
-    def get_eid(self): return self.eid
-    def get_pwd(self): return self.pwd
+    def get_eid(self) -> str: return self.eid
+    def get_pwd(self) -> str: return self.pwd
 
     # setters
-    def set_eid(self, eid): self.eid = eid
-    def set_pwd(self, pwd): self.pwd = pwd
+    def set_eid(self, eid:str): self.eid = eid
+    def set_pwd(self, pwd:str): self.pwd = pwd

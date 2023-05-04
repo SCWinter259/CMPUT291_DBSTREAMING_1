@@ -1,3 +1,7 @@
+from Models.Customer import Customer
+from Models.Editor import Editor
+from Models.Session import Session
+
 class Cache:
     def __init__(self):
         '''
@@ -11,9 +15,9 @@ class Cache:
         self.session = None
 
     # getters
-    def get_user(self): return self.user
-    def get_session(self): return self.session
+    def get_user(self) -> Customer | Editor: return self.user
+    def get_session(self) -> Session: return self.session
 
     # setters
-    def set_user(self, user): self.user = user
-    def set_session(self, session): self.session = session
+    def set_user(self, user:Customer|Editor): self.user = user
+    def set_session(self, session:Session): self.session = session

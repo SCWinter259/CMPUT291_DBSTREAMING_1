@@ -22,7 +22,7 @@ You are given the following relational schema
 - `casts(mid, pid, role)`
 - `recommendations(watched, recommended, score)`
 - `customers(cid, name, pwd)`
-- `sessions(sid, name, pwd)`
+- `sessions(sid, name, sdate, duration)`
 - `watch(sid, cid, mid, duration)`
 - `follows(cid, pid)`
 - `editors(eid, pwd)`

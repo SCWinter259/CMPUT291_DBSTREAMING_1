@@ -38,11 +38,11 @@ class Customer:
         return True
 
     # getters
-    def get_cid(self): return self.cid
-    def get_name(self): return self.name
-    def get_pwd(self): return self.pwd
+    def get_cid(self) -> str: return self.cid
+    def get_name(self) -> str: return self.name
+    def get_pwd(self) -> str: return self.pwd
 
     # setters
-    def set_cid(self, cid): self.cid = cid
-    def set_name(self, name): self.name = name
-    def set_pwd(self, pwd): self.pwd = pwd
+    def set_cid(self, cid:str): self.cid = cid
+    def set_name(self, name:str): self.name = name
+    def set_pwd(self, pwd:str): self.pwd = pwd

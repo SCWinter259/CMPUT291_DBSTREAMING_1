@@ -2,6 +2,8 @@ from Controllers import config
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Models.Session import Session
+from Models.Movie import Movie
+from Models.MoviePeople import MoviePeople
 
 # This file contains functions that work directly with the database
 

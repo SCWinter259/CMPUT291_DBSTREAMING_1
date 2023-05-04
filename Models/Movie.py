@@ -6,13 +6,13 @@ class Movie:
         self.runtime = None
 
     # getters
-    def get_mid(self): return self.mid
-    def get_title(self): return self.title
-    def get_year(self): return self.year
-    def get_runtime(self): return self.runtime
+    def get_mid(self) -> str: return self.mid
+    def get_title(self) -> str: return self.title
+    def get_year(self) -> int: return self.year
+    def get_runtime(self) -> int: return self.runtime
 
     # setters
-    def set_mid(self, mid): self.mid = mid
-    def set_title(self, title): self.title = title
-    def set_year(self, year): self.year = year
-    def set_runtime(self, runtime): self.runtime = runtime
+    def set_mid(self, mid:str): self.mid = mid
+    def set_title(self, title:str): self.title = title
+    def set_year(self, year:int): self.year = year
+    def set_runtime(self, runtime:int): self.runtime = runtime
