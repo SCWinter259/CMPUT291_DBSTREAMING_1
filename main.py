@@ -1,5 +1,8 @@
 import sqlite3
 from Controllers import config
+from Controllers.SysStack import SysStack
+from Controllers.Cache import Cache
+from Views.LoginView import login_view
 
 def get_path():
     #path = input("Please enter your path: ")
@@ -15,6 +18,11 @@ def connect(path):
 def main():
     path = get_path()
     connect(path)    
+
+    system = SysStack()
+    cache = Cache()
+    #TODO: try to finish this part to test our system design
+    system.control()
 
 main()
 
