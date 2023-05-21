@@ -1,18 +1,5 @@
 # CMPUT291_DBSTREAMING_1
 
-## About
-This is the Mini-project 1 of CMPUT 291, UAlberta, Winter 2022
-
-This is a model of a movie streaming service, using Python and SQLite.
-
-You can see the old version in the "Old Version" folder. The old version was done in collaboration with Daniel Akanmu (akamu@ualberta.ca) and Youssef Amer (yamer@ualberta.ca). Most functionalities for the customer part works fine, especially the gigantic search engine. There were some issues recording the watch session into the database. The Editor part was also experiencing some issues and only works partly.
-
-The "Legacy Code" folder is actually just the Old Version broken up into different files.
-
-This project is currently going through an overhaul for better code quality and to fix last version's issues. The old version, despite taking up lots of effort, had bad planning because we had to accomodate the assignment deadline. The bugs were beyond repair.
-
-In this newer version, I combine the priciples of Object Oriented Programming and the use of functions. We use a more structured Model-View-Controller (MVC) pattern to control the logic. Type notation is introduced, and two BASH scripts for git automation and database creation automation are added. This version is also developed via Github and has (or will have) a Wiki and a backlog.
-
 ## Project Specifications
 
 ### Database Specification
