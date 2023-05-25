@@ -2,7 +2,6 @@ import sqlite3
 from Controllers import config
 from Controllers.SysStack import SysStack
 from Controllers.Cache import Cache
-from Views.LoginView import login_view
 
 def get_path():
     #path = input("Please enter your path: ")
@@ -19,10 +18,19 @@ def main():
     path = get_path()
     connect(path)    
 
-    system = SysStack()
+    system = SysStack
+    print(type(system))
+    print("1")
     cache = Cache()
-    #TODO: try to finish this part to test our system design
-    system.control()
+    system.set_cache(cache=cache)
+    view = "login_view"
+    system.control(view)
+    
+    # TODO: try to finish this part to test our system design
+    while system.peek() != None:
+        print("ok")
+        view = system.get_next_function()
+        system.control(view)
 
 main()
 

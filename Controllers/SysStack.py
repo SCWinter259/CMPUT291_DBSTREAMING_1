@@ -20,22 +20,23 @@ class SysStack:
 
         self.all_views = {
             "exit": exit(),
-            "login_view": login_view(self.cache),
-            "register_view": register_view(self.cache),
-            "general_editor_view": general_editor_view(self.cache),
-            "movie_search_view": movie_search_view(self.cache),
-            "movie_info_view": movie_info_view(self.cache),
-            "watch_movie_view": watch_movie_view(self.cache),
-            "follow_cast_member_view": follow_cast_member_view(self.cache)
+            "login_view": login_view,
+            "register_view": register_view,
+            "general_editor_view": general_editor_view,
+            "movie_search_view": movie_search_view,
+            "movie_info_view": movie_info_view,
+            "watch_movie_view": watch_movie_view,
+            "follow_cast_member_view": follow_cast_member_view
         }
 
-    def add(self, func_name):
+    def add(self, func_name:str):
         self.stack.append(func_name)
 
     def remove(self):
         self.stack.pop()
 
-    def peek(self) -> function:
+    def peek(self):
+        if len(self.stack) == 0: return None
         return self.stack[-1]
 
     def see_stack(self) -> list:
@@ -43,7 +44,7 @@ class SysStack:
     
     def set_cache(self, cache:Cache): self.cache = cache
 
-    def control(self, func_name):
+    def control(self, func_name:str):
         '''
         This method receives function name and checks is the function is already in the stack.
         If yes, pop all function names after it. If no, add it to the end.
@@ -54,4 +55,4 @@ class SysStack:
         else:
             self.add(func_name)
 
-    def get_next_function(self) -> function: return self.all_views[self.peek()]
+    def get_next_function(self): return self.all_views[self.peek()](self.cache)
