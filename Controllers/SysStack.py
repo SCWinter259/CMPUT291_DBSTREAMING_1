@@ -1,12 +1,3 @@
-from Controllers.Cache import Cache
-from Views.LoginView import login_view
-from Views.RegisterView import register_view
-from Views.GeneralEditorView import general_editor_view
-from Views.MovieSearchView import movie_search_view
-from Views.MovieInfoView import movie_info_view
-from Views.WatchMovieView import watch_movie_view
-from Views.FollowCastMemberView import follow_cast_member_view
-
 class SysStack:
     def __init__(self):
         '''
@@ -16,18 +7,6 @@ class SysStack:
         function to be called!
         '''
         self.stack = []
-        self.cache = None
-
-        self.all_views = {
-            "exit": exit(),
-            "login_view": login_view,
-            "register_view": register_view,
-            "general_editor_view": general_editor_view,
-            "movie_search_view": movie_search_view,
-            "movie_info_view": movie_info_view,
-            "watch_movie_view": watch_movie_view,
-            "follow_cast_member_view": follow_cast_member_view
-        }
 
     def add(self, func_name:str):
         self.stack.append(func_name)
@@ -41,8 +20,6 @@ class SysStack:
 
     def see_stack(self) -> list:
         return self.stack       # for debugging
-    
-    def set_cache(self, cache:Cache): self.cache = cache
 
     def control(self, func_name:str):
         '''
@@ -54,5 +31,3 @@ class SysStack:
                 self.remove()
         else:
             self.add(func_name)
-
-    def get_next_function(self): return self.all_views[self.peek()](self.cache)

@@ -1,5 +1,5 @@
 from typing import Union
-from Controllers import config
+import config
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Models.Session import Session

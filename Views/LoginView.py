@@ -1,9 +1,9 @@
-from Controllers.Cache import Cache
+import cache
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Controllers.QueryFunctions import *
 # This view should contain login and sign up
-def login_view(cache:Cache) -> str:
+def login_view() -> str:
     '''
     As a view, this function takes in the Cache object.
     This function takes user input, validate the input, update the cache, 
@@ -26,14 +26,14 @@ def login_view(cache:Cache) -> str:
     elif choice == "1":
         uid = input("Enter your id: ")
         pwd = input("Enter your password: ")
-        cache.set_user(find_user(uid, pwd))
-        if cache.get_user() == None:
+        cache.user = find_user(uid, pwd)
+        if cache.user == None:
             print("Your id and//or password is incorrect!")
             return "login_view"
-        elif type(cache.get_user()) is Customer:
+        elif type(cache.user) is Customer:
             #TODO: set the session into the cache
             return "movie_search_view"
-        elif type(cache.get_user()) is Editor:
+        elif type(cache.user) is Editor:
             return "general_editor_view"
     elif choice == "2":
         return "register_view"

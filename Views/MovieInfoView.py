@@ -1,4 +1,2 @@
-from Controllers.Cache import Cache
-
-def movie_info_view(cache:Cache) -> str:
+def movie_info_view() -> str:
     pass
