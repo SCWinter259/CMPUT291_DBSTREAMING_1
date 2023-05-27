@@ -1,2 +1,0 @@
-connection = None
-cursor = None
