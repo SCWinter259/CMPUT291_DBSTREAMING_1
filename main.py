@@ -1,7 +1,7 @@
 import sqlite3
-from Controllers import config
+import config
+import all_views
 from Controllers.SysStack import SysStack
-from Controllers.Cache import Cache
 from Views.LoginView import login_view
 
 def get_path():
@@ -20,9 +20,15 @@ def main():
     connect(path)    
 
     system = SysStack()
-    cache = Cache()
-    #TODO: try to finish this part to test our system design
-    system.control()
+    frame = "login_view"
+    system.control(frame)
+    print(system.see_stack())
+
+    while system.peek() != None:
+        print("ok")
+        frame = all_views.views[system.peek()]
+        frame()
+        system.control(frame)
 
 main()
 

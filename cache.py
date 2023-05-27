@@ -1,0 +1,2 @@
+user = None
+session = None

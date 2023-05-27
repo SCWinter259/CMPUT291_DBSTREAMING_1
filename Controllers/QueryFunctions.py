@@ -1,4 +1,5 @@
-from Controllers import config
+from typing import Union
+import config
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Models.Session import Session
@@ -7,7 +8,7 @@ from Models.MoviePeople import MoviePeople
 
 # This file contains functions that work directly with the database
 
-def find_user(id: str, pwd: str) -> Customer | Editor | None:
+def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     '''
     This function finds the user, given the id and password. It should be able to tell
     if this is a customer or an editor, and return the appropriate object (Customer or Editor)
@@ -52,7 +53,7 @@ def register_customer(cid: str, name:str, pwd: str) -> bool:
     else:
         return False
 
-def find_customer(cid: str) -> Customer | None:
+def find_customer(cid: str) -> Union[Customer, None]:
     '''
     This function finds the customer given the cid (does not use password)
     Returns Customer object if customer exists, None otherwise
@@ -70,7 +71,7 @@ def find_customer(cid: str) -> Customer | None:
     else: 
         return None
 
-def find_editor(eid: str) -> Editor | None:
+def find_editor(eid: str) -> Union[Editor, None]:
     '''
     This function finds the editor given the eid (does not use password)
     Returns Editor object if customer exists, None otherwise
