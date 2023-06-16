@@ -6,12 +6,6 @@ class Session:
         self.etime = None
         self.duration = None
 
-    def start(self):
-        '''
-        starts a session given the cid. Store the session's information
-        into the database with a duration of NULL
-        '''
-
     def end(self):
         pass
 

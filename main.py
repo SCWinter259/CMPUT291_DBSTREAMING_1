@@ -1,6 +1,7 @@
 import sqlite3
 import config
 import all_views
+import streamlit as st
 from Controllers.SysStack import SysStack
 from Views.LoginView import login_view
 
@@ -24,11 +25,13 @@ def main():
     system.control(frame)
     print(system.see_stack())
 
-    while system.peek() != None:
-        print("ok")
+    while system.peek() != None and system.peek() != 'exit':
+        print(system.peek())
         frame = all_views.views[system.peek()]
-        frame()
-        system.control(frame)
+        next_frame = frame()
+        system.control(next_frame)
+
+    st.stop()
 
 main()
 
