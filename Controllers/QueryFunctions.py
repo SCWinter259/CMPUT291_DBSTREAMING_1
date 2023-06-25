@@ -41,17 +41,12 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
 
 def register_customer(cid: str, name:str, pwd: str) -> bool:
     '''
-    This function registers a customer with given cid and pwd. The registered account must
-    not have the same id as any other customer or editor
-    Returns True if success, False otherwise
+    This function registers a customer with given cid and pwd.
+    This function has no return
     '''
-    if find_customer(cid) == None or find_editor(cid) == None:
-        config.cursor.execute("INSERT INTO customers VALUES (:id, :name, :pass)",
+    config.cursor.execute("INSERT INTO customers VALUES (:id, :name, :pass)",
                                     {"id":cid, "name":name, "pass":pwd})
-        config.connection.commit()
-        return True
-    else:
-        return False
+    config.connection.commit()
 
 def find_customer(cid: str) -> Union[Customer, None]:
     '''
@@ -64,9 +59,9 @@ def find_customer(cid: str) -> Union[Customer, None]:
 
     if result != None:
         user = Customer()
-        user.set_cid(user[0])
-        user.set_name(user[1])
-        user.set_pwd(user[2])
+        user.set_cid(user.get_cid())
+        user.set_name(user.get_name())
+        user.set_pwd(user.get_pwd())
         return user
     else: 
         return None
@@ -82,8 +77,8 @@ def find_editor(eid: str) -> Union[Editor, None]:
     
     if result != None:
         user = Editor()
-        user.set_eid(user[0])
-        user.set_pwd(user[1])
+        user.set_eid(user.get_eid())
+        user.set_pwd(user.get_pwd())
         return user
     else:
         return None
