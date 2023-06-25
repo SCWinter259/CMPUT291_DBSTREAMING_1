@@ -34,8 +34,7 @@ class Customer:
         '''
         pass
 
-    def is_customer(self):
-        return True
+    def is_customer(self) -> bool: return True
 
     # getters
     def get_cid(self) -> str: return self.cid

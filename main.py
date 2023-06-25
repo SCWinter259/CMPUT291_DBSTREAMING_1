@@ -20,18 +20,26 @@ def main():
     path = get_path()
     connect(path)    
 
-    system = SysStack()
-    frame = "login_view"
-    system.control(frame)
-    print(system.see_stack())
+    # UNCOMMENT THIS PART FOR ACTUAL PROGRAM
 
-    while system.peek() != None and system.peek() != 'exit':
-        print(system.peek())
-        frame = all_views.views[system.peek()]
-        next_frame = frame()
-        system.control(next_frame)
+    # system = SysStack()
+    # frame = "login_view"
+    # system.control(frame)
+    # print(system.see_stack())
 
-    st.stop()
+    # while system.peek() != None and system.peek() != 'exit':
+    #     frame = all_views.views[system.peek()]
+    #     next_frame = frame()
+    #     system.control(next_frame)
+
+    # END
+
+    # THIS PART IS FOR TESTING!!! COMMENT OUT IF YOU WANT THE ACTUAL PROGRAM
+
+    frame = "register_view"
+    frame = all_views.views[frame]
+    next_frame = frame()
+    print(next_frame)
 
 main()
 
