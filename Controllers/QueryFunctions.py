@@ -20,9 +20,9 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
 
     if result != None:
         user = Customer()
-        user.set_cid(user[0])
-        user.set_name(user[1])
-        user.set_pwd(user[2])
+        user.set_cid(result[0])
+        user.set_name(result[1])
+        user.set_pwd(result[2])
         return user
     
     # If such customer does not exist, checks if such editor exists. Return Editor object if yes
@@ -32,8 +32,8 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     
     if result != None:
         user = Editor()
-        user.set_eid(user[0])
-        user.set_pwd(user[1])
+        user.set_eid(result[0])
+        user.set_pwd(result[1])
         return user
     
     # Return None if no such editor and customer exists 
@@ -109,15 +109,15 @@ def start_session(customer:Customer) -> Session:
 
     # create Session object
     session = Session()
-    session.set_sid(sid)
+    session.set_sid(sid[0])
     session.set_cid(cid)
-    session.set_stime(stime)
+    session.set_stime(stime[0])
 
-    stime = stime.split()       # get the time format for the sessions table
+    stime = stime[0].split()       # get the time format for the sessions table
     stime = stime[0]
 
     config.cursor.execute("INSERT INTO sessions VALUES (:session_id, :customer_id, :start_time, NULL)", 
-                          {"session_id":sid, "customer_id":cid, "start_time":stime})
+                          {"session_id":session.get_sid(), "customer_id":session.get_cid(), "start_time":stime})
     config.connection.commit()
     
     return session

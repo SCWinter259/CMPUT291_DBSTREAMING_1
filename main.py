@@ -36,7 +36,7 @@ def main():
 
     # THIS PART IS FOR TESTING!!! COMMENT OUT IF YOU WANT THE ACTUAL PROGRAM
 
-    frame = "register_view"
+    frame = "login_view"
     frame = all_views.views[frame]
     next_frame = frame()
     print(next_frame)
