@@ -14,8 +14,10 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     if this is a customer or an editor, and return the appropriate object (Customer or Editor)
     '''
     # Checks if such customer exists. Return Customer object is yes
-    config.cursor.execute("SELECT * FROM customers WHERE cid=:id AND pwd=:pass",
-                                {"id":id, "pass":pwd})
+    config.cursor.execute(
+        "SELECT * FROM customers WHERE cid=:id AND pwd=:pass",
+        {"id":id, "pass":pwd}
+    )
     result = config.cursor.fetchone()
 
     if result != None:
@@ -26,8 +28,10 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
         return user
     
     # If such customer does not exist, checks if such editor exists. Return Editor object if yes
-    config.cursor.execute("SELECT * FROM editors WHERE eid=:id AND pwd=:pass",
-                                {"id":id, "pass":pwd})
+    config.cursor.execute(
+        "SELECT * FROM editors WHERE eid=:id AND pwd=:pass",
+        {"id":id, "pass":pwd}
+    )
     result = config.cursor.fetchone()
     
     if result != None:
@@ -44,8 +48,10 @@ def register_customer(cid: str, name:str, pwd: str) -> bool:
     This function registers a customer with given cid and pwd.
     This function has no return
     '''
-    config.cursor.execute("INSERT INTO customers VALUES (:id, :name, :pass)",
-                                    {"id":cid, "name":name, "pass":pwd})
+    config.cursor.execute(
+        "INSERT INTO customers VALUES (:id, :name, :pass)",
+        {"id":cid, "name":name, "pass":pwd}
+    )
     config.connection.commit()
 
 def find_customer(cid: str) -> Union[Customer, None]:
@@ -53,8 +59,10 @@ def find_customer(cid: str) -> Union[Customer, None]:
     This function finds the customer given the cid (does not use password)
     Returns Customer object if customer exists, None otherwise
     '''
-    config.cursor.execute("SELECT * FROM customers WHERE cid=:id",
-                            {"id":cid})
+    config.cursor.execute(
+        "SELECT * FROM customers WHERE cid=:id",
+        {"id":cid}
+    )
     result = config.cursor.fetchone()
 
     if result != None:
@@ -71,8 +79,10 @@ def find_editor(eid: str) -> Union[Editor, None]:
     This function finds the editor given the eid (does not use password)
     Returns Editor object if customer exists, None otherwise
     '''
-    config.cursor.execute("SELECT * FROM editors WHERE eid=:id",
-                                {"id":eid})
+    config.cursor.execute(
+        "SELECT * FROM editors WHERE eid=:id",
+        {"id":eid}
+    )
     result = config.cursor.fetchone()
     
     if result != None:
@@ -116,11 +126,177 @@ def start_session(customer:Customer) -> Session:
     stime = stime[0].split()       # get the time format for the sessions table
     stime = stime[0]
 
-    config.cursor.execute("INSERT INTO sessions VALUES (:session_id, :customer_id, :start_time, NULL)", 
-                          {"session_id":session.get_sid(), "customer_id":session.get_cid(), "start_time":stime})
+    config.cursor.execute(
+        "INSERT INTO sessions VALUES (:session_id, :customer_id, :start_time, NULL)", 
+        {"session_id":session.get_sid(), "customer_id":session.get_cid(), "start_time":stime}
+    )
     config.connection.commit()
     
     return session
+
+def search(text: str) -> list[Movie]:
+    '''
+    This function searches for movies based on the given text.
+
+    The customer should be able to provide one or more unique keywords, 
+    and the system should retrieve all movies that have any of those keywords in title, 
+    cast member name or cast member role. For each match, at least the title, the year, 
+    and the duration should be displayed, and the result should be ordered based on the 
+    number of matching keywords with movies matching the largest number of 
+    keywords listed on top.
+
+    Returns a list of Movie objects sorted in the required order.
+    '''
+    # get the list of keywords
+    # keep in mind that the order of keywords will be random
+    # because we use set to remove duplication
+    keywords = list(set(_chop(text)))
+    keywords = [word.lower() for word in keywords]       
+
+    all_mid = []        # for the mids (unique)
+    all_count = []      # for the number of matches for each mid 
+
+    for keyword in keywords:
+        mid_title_list = _search_title(keyword)
+        mid_role_list = _search_member_role(keyword)
+        mid_name_list = _search_member_name(keyword)
+        
+        # if mid already exists in all_mid, update the count. If not append new mid and new count
+        for [mid, count] in mid_title_list:
+            if mid in all_mid:
+                all_count[all_mid.index(mid)] += count
+            else:
+                all_mid.append(mid)
+                all_count.append(count)
+
+        for [mid, count] in mid_role_list:
+            if mid in all_mid:
+                all_count[all_mid.index(mid)] += count
+            else:
+                all_mid.append(mid)
+                all_count.append(count)
+
+        for [mid, count] in mid_name_list:
+            if mid in all_mid:
+                all_count[all_mid.index(mid)] += count
+            else:
+                all_mid.append(mid)
+                all_count.append(count)
+
+    mid_list = zip(all_mid, all_count)
+    mid_list.sort(key=lambda index: index[1], reversed=True)        # sort the zipped list by count, descending order
+
+    movie_list = []
+    for item in mid_list:
+        mid = item[0]
+        config.cursor.execute(
+            '''SELECT mid, title, year, runtime FROM movies WHERE mid=:mid''',
+            {"mid": mid}
+        )
+        result = config.cursor.fetchone()
+
+        movie = Movie()
+        movie.set_mid(result[0])
+        movie.set_title(result[1])
+        movie.set_year(result[2])
+        movie.set_runtime(result[3])
+        
+        movie_list.append(movie)
+
+    return movie_list
+
+# support functions
+def _chop(text: str) -> list[str]:
+    '''
+    Takes in a string, return the list of words in that strings,
+    after getting rid of all white spaces, comma, colon, semi-colon, and question marks
+    '''
+    text = text.replace(',', ' ')
+    text = text.replace(':', ' ')
+    text = text.replace(';', ' ')
+    text = text.replace('?', ' ')
+
+    return text.split(' ')
+
+def _search_title(word: str) -> list[str, int]:
+    '''
+    This function searches for movies with title containing
+    the given keyword.
+    Returns a list of [mid, number of repetitions]
+    '''
+    mid_list = []
+    config.cursor.execute(
+        '''SELECT mid, title FROM movies WHERE title LIKE :word COLLATE NOCASE''',
+        {"word": word}
+    )
+    results = config.cursor.fetchall()      # got a list of (mid, title)
+
+    # count the number of repetition of the keyword in the title
+    for (mid, title) in results:
+        title_list_split = _chop(title)
+        count = title_list_split.count(word)
+        mid_list.append([mid, count])       # append appropriate data into the list
+
+    return mid_list
+
+def _search_member_role(word: str) -> list[str, int]:
+    '''
+    This function searches for movies with a role containing
+    the given keyword.
+    Returns a list of [mid, number of repetitions]
+    '''
+    mid_list = []
+    config.cursor.execute(
+        '''SELECT mid, role FROM casts WHERE role LIKE :word COLLATE NOCASE''',
+        {"word": word}
+    )
+    results = config.cursor.fetchall()      # got a list of (mid, role)
+
+    # count the number of repetition of the keyword in the role
+    for (mid, role) in results:
+        title_list_split = _chop(role)
+        count = title_list_split.count(word)
+        mid_list.append([mid, count])       # append appropriate data into the list
+
+    return mid_list
+
+def _search_member_name(word: str) -> list[str, int]:
+    '''
+    This function searches for movies with a member whose
+    name contains the given keyword.
+    Returns a list of [mid, number of repetitions]
+    '''
+    mid_list = []
+    config.cursor.execute(
+        '''SELECT pid, name FROM moviePeople WHERE name LIKE :word COLLATE NOCASE''',
+        {"word": word}
+    )
+    results = config.cursor.fetchall()      # got a list of (pid, name)
+
+    # count the number of repetition of the keyword in the name
+    pid_list = []
+    for (pid, name) in results:
+        title_list_split = _chop(name)
+        count = title_list_split.count(word)
+        pid_list.append([pid, count])       # append appropriate data into the list
+
+    for [pid, count] in pid_list:           # for each pid, find the mid
+        config.cursor.execute(
+            '''SELECT mid FROM casts WHERE pid=:pid''',
+            {"pid": pid}
+        )
+        all_mid = config.cursor.fetchall()
+        for mid in all_mid:         # does the mid exist in mid_list yet?
+            found = False
+            for i in range(len(mid_list)):
+                if mid_list[i][0] == mid:       # if yes, increase count
+                    found = True
+                    mid_list[i][1] += count
+                    break
+            if not found:           # if not, append new sub list
+                mid_list.append([mid, count])
+
+    return mid_list
 
 
 # below this line are scrap functions
@@ -184,24 +360,3 @@ def insert_customer(cid, name, pwd):
                                     {"id":cid, "name":name, "pass":pwd})
     config.connection.commit()
     print("Customer " + cid + " registered successfully")
-
-def start(self):
-        '''
-        starts a session given the cid. Store the session's information
-        into the database with a duration of NULL
-        '''
-        # mark the starting time
-        config.cursor.execute('''SELECT datetime('now')''')
-        self.set_stime(config.cursor.fetchone())
-        # mark the starting date
-        config.cursor.execute('''SELECT date('now')''')
-        self.set_sdate(config.cursor.fetchone()[0])
-        # create a new session id
-        config.cursor.execute('''SELECT MAX(sid) FROM sessions''')
-        self.set_sid(config.cursor.fetchone()[0] + 1)
-
-        config.cursor.execute('''INSERT INTO sessions VALUES(:sid, :cid, :sdate, NULL)''',
-                                    {"sid": self.sid, "cid": self.cid, "sdate": self.sdate})
-
-        config.connection.commit()
-
