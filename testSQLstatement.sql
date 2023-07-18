@@ -1,5 +1,4 @@
-SELECT MAX(sid)+1 AS session_id FROM sessions;
-SELECT datetime('now') AS start_time;
+SELECT mid, title FROM movies WHERE title LIKE "%Captain%" COLLATE NOCASE;
 
 /* INSERT INTO sessions VALUES (session_id, 'c100', start_time, NULL); */
 

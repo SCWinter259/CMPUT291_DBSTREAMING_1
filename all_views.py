@@ -1,3 +1,4 @@
+from Views.TestView import test_view
 from Views.LoginView import login_view
 from Views.RegisterView import register_view
 from Views.GeneralEditorView import general_editor_view
@@ -7,6 +8,7 @@ from Views.WatchMovieView import watch_movie_view
 from Views.FollowCastMemberView import follow_cast_member_view
 
 views = {
+    "test_view": test_view,
     "login_view": login_view,
     "register_view": register_view,
     "general_editor_view": general_editor_view,
