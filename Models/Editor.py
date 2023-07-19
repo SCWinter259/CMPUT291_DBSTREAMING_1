@@ -1,7 +1,7 @@
 class Editor:
-    def __init__(self):
-        self.eid = None
-        self.pwd = None
+    def __init__(self, eid: str, pwd: str):
+        self.eid = eid
+        self.pwd = pwd
 
     def add_movie(self):
         pass
@@ -25,5 +25,5 @@ class Editor:
     def get_pwd(self) -> str: return self.pwd
 
     # setters
-    def set_eid(self, eid:str): self.eid = eid
-    def set_pwd(self, pwd:str): self.pwd = pwd
+    def set_eid(self, eid: str): self.eid = eid
+    def set_pwd(self, pwd: str): self.pwd = pwd
