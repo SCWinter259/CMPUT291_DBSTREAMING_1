@@ -22,11 +22,7 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     result = config.cursor.fetchone()
 
     if result != None:
-        user = Customer()
-        user.set_cid(result[0])
-        user.set_name(result[1])
-        user.set_pwd(result[2])
-        return user
+        return Customer(cid=result[0], name=result[1], pwd=result[2])
     
     # If such customer does not exist, checks if such editor exists. Return Editor object if yes
     config.cursor.execute(
@@ -36,63 +32,21 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     result = config.cursor.fetchone()
     
     if result != None:
-        user = Editor()
-        user.set_eid(result[0])
-        user.set_pwd(result[1])
-        return user
+        return Editor(eid=result[0], pwd=[1])
     
     # Return None if no such editor and customer exists 
     return None
 
-def register_customer(cid: str, name:str, pwd: str) -> bool:
+def register_customer(cid: str, name:str, pwd: str) -> None:
     '''
     This function registers a customer with given cid and pwd.
-    This function has no return
+    Returns None
     '''
     config.cursor.execute(
         "INSERT INTO customers VALUES (:id, :name, :pass)",
         {"id":cid, "name":name, "pass":pwd}
     )
     config.connection.commit()
-
-def find_customer(cid: str) -> Union[Customer, None]:
-    '''
-    This function finds the customer given the cid (does not use password)
-    Returns Customer object if customer exists, None otherwise
-    '''
-    config.cursor.execute(
-        "SELECT * FROM customers WHERE cid=:id",
-        {"id":cid}
-    )
-    result = config.cursor.fetchone()
-
-    if result != None:
-        user = Customer()
-        user.set_cid(user.get_cid())
-        user.set_name(user.get_name())
-        user.set_pwd(user.get_pwd())
-        return user
-    else: 
-        return None
-
-def find_editor(eid: str) -> Union[Editor, None]:
-    '''
-    This function finds the editor given the eid (does not use password)
-    Returns Editor object if customer exists, None otherwise
-    '''
-    config.cursor.execute(
-        "SELECT * FROM editors WHERE eid=:id",
-        {"id":eid}
-    )
-    result = config.cursor.fetchone()
-    
-    if result != None:
-        user = Editor()
-        user.set_eid(user.get_eid())
-        user.set_pwd(user.get_pwd())
-        return user
-    else:
-        return None
 
 def start_session(customer:Customer) -> Session:
     '''
@@ -119,10 +73,7 @@ def start_session(customer:Customer) -> Session:
     stime = config.cursor.fetchone()      # get the appropriate stime
 
     # create Session object
-    session = Session()
-    session.set_sid(sid[0])
-    session.set_cid(cid)
-    session.set_stime(stime[0])
+    session = Session(sid=sid[0], cid=cid, stime=stime[0])
 
     stime = stime[0].split()       # get the time format for the sessions table
     stime = stime[0]
@@ -198,49 +149,47 @@ def search(text: str) -> list[Movie]:
         )
         result = config.cursor.fetchone()
 
-        movie = Movie()
-        movie.set_mid(result[0])
-        movie.set_title(result[1])
-        movie.set_year(result[2])
-        movie.set_runtime(result[3])
+        movie = Movie(mid=result[0], title=result[1], year=result[2], runtime=result[3])
         
         movie_list.append(movie)
 
     return movie_list
 
+def find_cast(movie: Movie) -> list[MoviePeople]:
+    '''
+    This function takes in a Movie object and finds the cast of that movie.
+    Returns a list of [MoviePeople, role] lists.
+    '''
+    cast = []
+
+    mid = movie.get_mid()
+
+    # find in casts table for all pids and roles of that mid
+    config.cursor.execute(
+        '''SELECT pid, role FROM casts WHERE mid=:mid''',
+        {"mid": mid}
+    )
+    all_pid_role = config.cursor.fetchall()     # we get a tuple of (pid, role,) for that mid
+
+    # for each pid, we find the full information about that member
+    for i in range(len(all_pid_role)):
+        pid = all_pid_role[i][0]
+        role = all_pid_role[i][1]
+        config.cursor.execute(
+            '''SELECT name, birthYear FROM moviePeople WHERE pid=:pid''',
+            {"pid": pid}
+        )
+        info = config.cursor.fetchone()
+        name = info[0]
+        birth_year = info[1]
+
+        cast_member = MoviePeople(pid=pid, name=name, birthYear=birth_year)
+
+        cast.append([cast_member, role])
+
+    return cast
+
 # below this line are scrap functions
-
-def search_engine(word):
-    '''
-    Takes a keyword as input. Search for an mid with that keyword in
-    title, cast member name, or cast member role
-    Returns a list of mids
-    '''
-    mid_list = []
-    # search in title
-    config.cursor.execute('''SELECT mid FROM movies
-                                WHERE title LIKE :word COLLATE NOCASE''',
-                                {"word": word})
-    results = config.cursor.fetchall()
-    for result in results:
-        mid_list.append(result[0])
-    # search in cast member names
-    config.cursor.execute('''SELECT mid FROM casts c, moviePeople m
-                                WHERE c.pid = m.pid
-                                AND m.name LIKE :word COLLATE NOCASE''',
-                                {"word": word})
-    results = config.cursor.fetchall()
-    for result in results:
-        mid_list.append(result[0])
-    # search in cast member role
-    config.cursor.execute('''SELECT mid FROM casts
-                                WHERE role LIKE :word COLLATE NOCASE''',
-                                {"word": word})
-    results = config.cursor.fetchall()
-    for result in results:
-        mid_list.append(result[0])
-
-    return mid_list
 
 def find_movie(mid):
     '''
@@ -259,13 +208,3 @@ def find_movie(mid):
         return movie
     else:
         return None
-    
-def insert_customer(cid, name, pwd):
-    '''
-    A function to add new customer into the database
-    Does not return anything
-    '''
-    config.cursor.execute("INSERT INTO customers VALUES (:id, :name, :pass)",
-                                    {"id":cid, "name":name, "pass":pwd})
-    config.connection.commit()
-    print("Customer " + cid + " registered successfully")

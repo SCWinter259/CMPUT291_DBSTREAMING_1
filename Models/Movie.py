@@ -1,9 +1,9 @@
 class Movie:
-    def __init__(self):
-        self.mid = None
-        self.title = None
-        self.year = None
-        self.runtime = None
+    def __init__(self, mid: str, title: str, year: int, runtime: int):
+        self.mid = mid
+        self.title = title
+        self.year = year
+        self.runtime = runtime
 
     # getters
     def get_mid(self) -> str: return self.mid
@@ -12,7 +12,7 @@ class Movie:
     def get_runtime(self) -> int: return self.runtime
 
     # setters
-    def set_mid(self, mid:str): self.mid = mid
-    def set_title(self, title:str): self.title = title
-    def set_year(self, year:int): self.year = year
-    def set_runtime(self, runtime:int): self.runtime = runtime
+    def set_mid(self, mid: str): self.mid = mid
+    def set_title(self, title: str): self.title = title
+    def set_year(self, year: int): self.year = year
+    def set_runtime(self, runtime: int): self.runtime = runtime
