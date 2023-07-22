@@ -37,6 +37,38 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     # Return None if no such editor and customer exists 
     return None
 
+def find_customer(cid: str) -> Union[Customer, None]:
+    '''
+    This function finds the customer given the cid (does not use password)
+    Returns Customer object if customer exists, None otherwise
+    '''
+    config.cursor.execute(
+        "SELECT * FROM customers WHERE cid=:id",
+        {"id":cid}
+    )
+    result = config.cursor.fetchone()
+
+    if result != None:
+        return Customer(cid=result[0], name=result[1], pwd=result[2])
+    else: 
+        return None
+
+def find_editor(eid: str) -> Union[Editor, None]:
+    '''
+    This function finds the editor given the eid (does not use password)
+    Returns Editor object if customer exists, None otherwise
+    '''
+    config.cursor.execute(
+        "SELECT * FROM editors WHERE eid=:id",
+        {"id":eid}
+    )
+    result = config.cursor.fetchone()
+
+    if result != None:
+        return Editor(eid=result[0], pwd=result[1])
+    else:
+        return None
+
 def register_customer(cid: str, name:str, pwd: str) -> None:
     '''
     This function registers a customer with given cid and pwd.
@@ -155,14 +187,12 @@ def search(text: str) -> list[Movie]:
 
     return movie_list
 
-def find_cast(movie: Movie) -> list[MoviePeople]:
+def find_cast(mid: int) -> list[MoviePeople, str]:
     '''
     This function takes in a Movie object and finds the cast of that movie.
     Returns a list of [MoviePeople, role] lists.
     '''
     cast = []
-
-    mid = movie.get_mid()
 
     # find in casts table for all pids and roles of that mid
     config.cursor.execute(
