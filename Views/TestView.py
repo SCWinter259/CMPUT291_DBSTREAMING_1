@@ -21,8 +21,12 @@ def test_view() -> str:
     #             st.write(movie.get_runtime())
 
     # TESTING FIND CAST QUERY FUNCTION
-    cast = find_cast(10)
-    for [member, role] in cast:
-        st.subheader(member.get_name())
-        st.write(member.get_birthYear())
-        st.write(role)
+    # cast = find_cast(10)
+    # for [member, role] in cast:
+    #     st.subheader(member.get_name())
+    #     st.write(member.get_birthYear())
+    #     st.write(role)
+
+    # TESTING COUNT CUSTOMER WATCHED FUNCTION
+    new_movie = Movie(mid=10, runtime=126, title='Iron Man', year=2008)
+    st.write(count_customer_watched(new_movie))

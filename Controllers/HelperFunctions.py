@@ -93,3 +93,19 @@ def _search_member_name(word: str) -> list[str, int]:
                 mid_list.append([mid[0], count])
 
     return mid_list
+
+def has_watched(cid: str, mid: int, runtime: int) -> bool:
+    '''
+    This function tells if the customer with the given cid has watched
+    the movie with the given mid or not.
+    Returns True if the customer has watched the movie, False otherwise.
+    '''
+    config.cursor.execute(
+        '''SELECT SUM(duration) FROM watch WHERE cid=:cid AND mid=:mid''',
+        {"cid": cid, "mid": mid}
+    )
+
+    time_watched = config.cursor.fetchone()[0]
+
+    if time_watched / runtime > 0.5: return True
+    return False
