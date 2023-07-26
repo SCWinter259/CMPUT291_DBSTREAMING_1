@@ -1,6 +1,7 @@
 from typing import Union
 import config
-from Controllers.HelperFunctions import _chop, _search_title, _search_member_name, _search_member_role
+from Controllers.HelperFunctions import (
+    _chop, _search_title, _search_member_name, _search_member_role, has_watched)
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Models.Session import Session
@@ -21,8 +22,7 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     )
     result = config.cursor.fetchone()
 
-    if result != None:
-        return Customer(cid=result[0], name=result[1], pwd=result[2])
+    if result != None: return Customer(cid=result[0], name=result[1], pwd=result[2])
     
     # If such customer does not exist, checks if such editor exists. Return Editor object if yes
     config.cursor.execute(
@@ -31,8 +31,7 @@ def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     )
     result = config.cursor.fetchone()
     
-    if result != None:
-        return Editor(eid=result[0], pwd=[1])
+    if result != None: return Editor(eid=result[0], pwd=[1])
     
     # Return None if no such editor and customer exists 
     return None
@@ -48,10 +47,8 @@ def find_customer(cid: str) -> Union[Customer, None]:
     )
     result = config.cursor.fetchone()
 
-    if result != None:
-        return Customer(cid=result[0], name=result[1], pwd=result[2])
-    else: 
-        return None
+    if result != None: return Customer(cid=result[0], name=result[1], pwd=result[2])
+    return None
 
 def find_editor(eid: str) -> Union[Editor, None]:
     '''
@@ -64,10 +61,8 @@ def find_editor(eid: str) -> Union[Editor, None]:
     )
     result = config.cursor.fetchone()
 
-    if result != None:
-        return Editor(eid=result[0], pwd=result[1])
-    else:
-        return None
+    if result != None: return Editor(eid=result[0], pwd=result[1])
+    return None
 
 def register_customer(cid: str, name:str, pwd: str) -> None:
     '''
@@ -218,6 +213,27 @@ def find_cast(mid: int) -> list[MoviePeople, str]:
         cast.append([cast_member, role])
 
     return cast
+
+def count_customer_watched(movie: Movie) -> int:
+    '''
+    This function counts the number of customers who have watched 
+    the movie (given Movie object).
+    Returns the number of customers who have watched the movie.
+    '''
+    # find all customers
+    count = 0
+
+    config.cursor.execute(
+        '''SELECT cid FROM customers'''
+    )
+
+    results = config.cursor.fetchall()
+
+    for (cid,) in results:
+        if has_watched(cid=cid, mid=movie.get_mid(), runtime=movie.get_runtime()):
+            count += 1
+
+    return count
 
 # below this line are scrap functions
 
