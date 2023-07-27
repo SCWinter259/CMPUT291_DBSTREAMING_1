@@ -1,16 +1,26 @@
 import streamlit as st
 import cache
-from Controllers.QueryFunctions import *
+from Controllers.QueryFunctions import (find_user, start_session)
 # This view should contain login and sign up
 def login_view() -> str:
     '''
-    This view shows a text field for ID and a text field for password (for login purposes).
-    There is a button for login and a button for register new account.
-    If login button is pressed, the entered ID and password would be evaluated.
-        If login failed, a warning should be shown.
-        If login successfully, the appropriate Customer or Editor object should be cached.
-            If the user is a customer, a session should be started and cached, then return "movie_search_view"
-            If the user is an editor, return "general_editor_view"
+    This view is for a customer login.
+
+    Requirements for a user to login:
+    - The entered ID should be an ID either in customers or editors table.
+    - The entered password should be matching with the given ID.
+
+    This view has a text field for ID, a text field for password, a button for login, and
+    a button for registering a new customer account.
+
+    If the user chooses to register a new customer account, the view will return "register_view".
+    If the login button is clicked, and the entered credentials are invalid, a warning
+    should be shown. If the credentials are valid, a session should be started in the sessions
+    table, a Session object and a Customer or Editor object should be cached. The view
+    would return "movie_search_view" if the user is a customer, and 'general_editor_view' 
+    if the user is an editor.
+
+    You may want to use find_user() and start_session() functions.
     '''
 
     st.title('Welcome to DB Streaming 1!')
