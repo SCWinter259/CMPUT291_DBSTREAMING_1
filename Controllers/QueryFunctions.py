@@ -9,6 +9,8 @@ from Models.Movie import Movie
 from Models.MoviePeople import MoviePeople
 
 # This file contains functions that work directly with the database
+# We try to import config only in this file (to avoid circulating imports)
+# cache is imported in View files
 
 def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     '''
@@ -234,6 +236,31 @@ def count_customer_watched(movie: Movie) -> int:
             count += 1
 
     return count
+
+def follow(cid: str, pid: str) -> None:
+    '''
+    This function add the given cid and pid to the follows table,
+    signalling that the given customer follows the given cast member.
+    Returns None
+    '''
+    pass
+
+def watch():
+    '''
+    This function helps the customer to start watching a movie.
+    We would write into the watch table the current session id and
+    customer id (taken from cache file), the mid of the movie being watched,
+    and duration as NULL.
+    '''
+
+def end_watch():
+    pass
+
+def end_session():
+    pass
+
+def logout():
+    pass
 
 # below this line are scrap functions
 
