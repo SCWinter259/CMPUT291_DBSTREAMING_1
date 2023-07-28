@@ -12,8 +12,10 @@ def movie_info_view() -> str:
     - List of names of cast members and their roles
 
     When the back button is clicked, the view returns 'movie_search_view'.
-    When the watch movie button is clicked, the view returns 'watch_movie_view'.
-    When the follow cast member button is clicked, the view returns 'follow_cast_member_view'.
+    When the watch movie button is clicked, the view caches the movie,
+    then returns 'watch_movie_view'.
+    When the follow cast member button is clicked, the view caches the cast
+    member, then returns 'follow_cast_member_view'.
     When the logout button is clicked, the view reset the cache, log the user out,
     and returns 'login_view'.
 

@@ -12,6 +12,10 @@ from Models.MoviePeople import MoviePeople
 # We try to import config only in this file (to avoid circulating imports)
 # cache is imported in View files
 
+# below, some of the functions take in, say, Customer, while some others only
+# take in the cid. Generally, if the function only needs one attribute from the object,
+# the function would only take in that one attribute.
+
 def find_user(id: str, pwd: str) -> Union[Customer, Editor, None]:
     '''
     This function finds the user, given the id and password. It should be able to tell
@@ -243,41 +247,56 @@ def follow(cid: str, pid: str) -> None:
     signalling that the given customer follows the given cast member.
     Returns None
     '''
-    pass
+    config.cursor.execute(
+        '''INSERT INTO follows VALUES (:cid, :pid)''',
+        {"cid": cid, "pid": pid}
+    )
+    config.connection.commit()
 
-def watch():
+def watch(sid: int, cid: str, mid: int) -> str:
     '''
     This function helps the customer to start watching a movie.
     We would write into the watch table the current session id and
     customer id (taken from cache file), the mid of the movie being watched,
     and duration as NULL.
+    This function returns the start time of the watch, which is a string
     '''
+    config.cursor.execute(
+        '''INSERT INTO watch VALUES (:sid, :cid, :mid, NULL)''',
+        {"sid": sid, "cid": cid, "mid": mid}
+    )
+    config.connection.commit()
 
-def end_watch():
-    pass
+    config.cursor.execute("SELECT datetime('now')")
+    stime = config.cursor.fetchone()      # get the appropriate stime
+
+    return stime[0]
+
+def end_watch(sid: int, cid: str, mid: int, stime: str) -> None:
+    '''
+    This function would end the customer's movie watch by replacing the NULL value
+    in the duration column of the watch table with the actual duration that the 
+    customer has watched the movie.
+    Returns None
+    '''
+    # get the duration
+    config.cursor.execute(
+        '''SELECT strftime('%M', 'now') - strftime('%M', :stime)''',
+        {'stime': stime}
+    )
+    duration = config.cursor.fetchone()
+    duration = duration[0]
+
+    # update the duration column
+    config.cursor.execute(
+        '''UPDATE watch SET duration=:duration 
+        WHERE sid=:sid AND cid=:cid AND mid=:mid''',
+        {"sid": sid, "cid": cid, "mid": mid, "duration": duration}
+    )
+    config.connection.commit()
 
 def end_session():
     pass
 
 def logout():
     pass
-
-# below this line are scrap functions
-
-def find_movie(mid):
-    '''
-    Find a movie based on provided mid.
-    Returns a Movie object if Movie exists, None otherwise
-    '''
-    config.cursor.execute('''SELECT * FROM movies WHERE mid = :mid''',
-                                {"mid": mid})
-    info = config.cursor.fetchone()
-    if info != None:
-        movie = Movie()
-        movie.set_mid(info[0])
-        movie.set_title(info[1])
-        movie.set_year(info[2])
-        movie.set_runtime(info[3])
-        return movie
-    else:
-        return None
