@@ -1,11 +1,11 @@
 from Views.TestView import test_view
 from Views.LoginView import login_view
 from Views.RegisterView import register_view
-from Views.GeneralEditorView import general_editor_view
-from Views.MovieSearchView import movie_search_view
-from Views.MovieInfoView import movie_info_view
-from Views.WatchMovieView import watch_movie_view
-from Views.FollowCastMemberView import follow_cast_member_view
+from Views.EditorViews.GeneralEditorView import general_editor_view
+from Views.CustomerViews.MovieSearchView import movie_search_view
+from Views.CustomerViews.MovieInfoView import movie_info_view
+from Views.CustomerViews.WatchMovieView import watch_movie_view
+from Views.CustomerViews.FollowCastMemberView import follow_cast_member_view
 
 views = {
     "test_view": test_view,
