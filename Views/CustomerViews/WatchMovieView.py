@@ -12,5 +12,5 @@ def watch_movie_view() -> str:
     table (just like the stop watching button), but will also clear the cache, store the
     session, and return 'login_view'.
 
-    You may want to use end_watch(), logout() functions.
+    You may want to use end_watch(), end_session() functions.
     '''

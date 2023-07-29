@@ -19,5 +19,5 @@ def movie_info_view() -> str:
     When the logout button is clicked, the view reset the cache, log the user out,
     and returns 'login_view'.
 
-    You may want to use find_cast(), count_customer_watched(), logout()
+    You may want to use find_cast(), count_customer_watched().
     '''
