@@ -295,8 +295,31 @@ def end_watch(sid: int, cid: str, mid: int, stime: str) -> None:
     )
     config.connection.commit()
 
-def end_session():
-    pass
+def end_session(session: Session) -> None:
+    '''
+    This function ends the customer session by recording the session duration into
+    the sessions table. This function is to be called when the customer logout.
+    Returns None.
+    '''
+    sid = session.get_sid()
+    cid = session.get_cid()
+    stime = session.get_stime()
 
-def logout():
-    pass
+    # get the duration in minutes
+    config.cursor.execute(
+        '''SELECT strftime('%M', 'now') - strftime('%M', :stime)''',
+        {'stime': stime}
+    )
+    duration = config.cursor.fetchone()
+    duration = duration[0]
+
+    sdate = stime.split()       # get the time format for the sessions table
+    sdate = sdate[0]
+
+    # update the duration column
+    config.cursor.execute(
+        '''UPDATE sessions SET duration=:duration 
+        WHERE sid=:sid AND cid=:cid AND sdate=:sdate''',
+        {"sid": sid, "cid": cid, "sdate": sdate, "duration": duration}
+    )
+    config.connection.commit()

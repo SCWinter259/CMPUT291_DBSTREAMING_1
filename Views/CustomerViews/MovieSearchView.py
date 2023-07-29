@@ -20,5 +20,5 @@ def movie_search_view() -> str:
     If the logout button is clicked, the view should clear the cache, log the user out, and
     return 'login_view'.
 
-    You may want to use search() and logout() functions.
+    You may want to use search(), end_session() functions.
     '''

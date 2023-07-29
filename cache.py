@@ -1,4 +1,3 @@
 user = None
 session = None
-movie = None
-cast_member = None
+# remember that the selected mid and pid are cached with the user!
