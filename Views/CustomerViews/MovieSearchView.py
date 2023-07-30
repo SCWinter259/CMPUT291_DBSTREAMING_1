@@ -1,3 +1,7 @@
+import streamlit as st
+import cache
+from Controllers.QueryFunctions import (search, end_session)
+
 def movie_search_view() -> str:
     '''
     This view is for the customer to search for a movie.
@@ -15,10 +19,35 @@ def movie_search_view() -> str:
     left to display). This button should only appear if there are more results left.
 
     Each of the result should be displayed with its title, year, duration, and a button
-    saying 'More information'. When this button is clicked, the view should return 'movie_info_view'.
+    saying 'More information'. When this button is clicked, the view should cache
+    the chosen movie (into Customer object) and return 'movie_info_view'.
 
     If the logout button is clicked, the view should clear the cache, log the user out, and
     return 'login_view'.
 
     You may want to use search(), end_session() functions.
     '''
+    st.title('Search for a movie')
+
+    if st.button('Logout'):
+        end_session(cache.session)
+        cache.user = None
+        cache.session = None
+        return 'login_view'
+
+    text = st.text_input(label='Seach for a movie')
+
+    if st.session_state.get('search_button') != True:
+        st.session_state.search_button = st.button('Search')
+
+    if st.session_state.get('search_button') == True:
+        movie_list = search(text)
+        if len(movie_list) == 0: st.write('No results found.')
+        else:
+            for movie in movie_list:
+                st.header(movie.get_title())
+                st.write('Release year:', movie.get_year())
+                st.write('Duration:', movie.get_runtime())
+                if st.button(key=movie.get_mid(), label='More information'):
+                    cache.user.set_selected_mid(movie.get_mid())
+                    return 'movie_info_view'
