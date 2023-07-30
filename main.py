@@ -3,7 +3,6 @@ import config
 import all_views
 import streamlit as st
 from Controllers.SysStack import SysStack
-from Views.LoginView import login_view
 
 def get_path():
     #path = input("Please enter your path: ")
@@ -36,7 +35,8 @@ def main():
 
     # THIS PART IS FOR TESTING!!! COMMENT OUT IF YOU WANT THE ACTUAL PROGRAM
 
-    frame = "test_view"
+    # frame = "test_view"
+    frame = 'movie_search_view'
     frame = all_views.views[frame]
     next_frame = frame()
     print(next_frame)
