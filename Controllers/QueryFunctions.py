@@ -70,6 +70,20 @@ def find_editor(eid: str) -> Union[Editor, None]:
     if result != None: return Editor(eid=result[0], pwd=result[1])
     return None
 
+def find_movie(mid: int) -> Union[Movie, None]:
+    '''
+    This function finds the movie given the mid.
+    Returns Movie object if movie exists, None otherwise
+    '''
+    config.cursor.execute(
+        "SELECT * FROM movies WHERE mid=:mid",
+        {"mid":mid}
+    )
+    result = config.cursor.fetchone()
+
+    if result != None: return Movie(mid=result[0], title=result[1], year=result[2], runtime=result[3])
+    return None
+
 def register_customer(cid: str, name:str, pwd: str) -> None:
     '''
     This function registers a customer with given cid and pwd.

@@ -1,6 +1,6 @@
 from Views.TestView import test_view
 from Views.LoginView import login_view
-from Views.RegisterView import register_view
+from Views.CustomerViews.RegisterView import register_view
 from Views.EditorViews.GeneralEditorView import general_editor_view
 from Views.CustomerViews.MovieSearchView import movie_search_view
 from Views.CustomerViews.MovieInfoView import movie_info_view
