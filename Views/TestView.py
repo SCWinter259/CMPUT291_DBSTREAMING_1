@@ -77,3 +77,10 @@ def test_view() -> str:
     #         st.session_state['button'] = False
 
     #         st.checkbox('Reload')
+
+    # TEST find_movie()
+    # movie = find_movie(10)
+    # print(movie.get_mid())
+    # print(movie.get_title())
+    # print(movie.get_year())
+    # print(movie.get_runtime())
