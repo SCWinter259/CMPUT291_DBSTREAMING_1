@@ -29,8 +29,8 @@ def movie_info_view() -> str:
 
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
-    st.header('Movie title:', movie.title)
-    st.swrite(f'Release year: {movie.year}/nDuration: {movie.runtime}/nCast members:')
+    st.header('Movie title:', movie.get_title())
+    st.swrite(f'Release year: {movie.get_year()}/nDuration: {movie.get_runtime()}/nCast members:')
     movie_people_lists = find_cast(mid)
     for movie_people_list in movie_people_lists:
         movie_people, role = movie_people_list
