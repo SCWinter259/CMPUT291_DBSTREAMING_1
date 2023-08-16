@@ -257,15 +257,26 @@ def count_customer_watched(movie: Movie) -> int:
 
 def follow(cid: str, pid: str) -> None:
     '''
-    This function add the given cid and pid to the follows table,
-    signalling that the given customer follows the given cast member.
-    Returns None
+    If the customer has already followed the cast member, this
+    function would return False and not change anything.
+    Else, this function add the given cid and pid to the follows table,
+    signalling that the given customer follows the given cast member
+    and return True.
     '''
     config.cursor.execute(
-        '''INSERT INTO follows VALUES (:cid, :pid)''',
+        '''SELECT * FROM follows WHERE cid=:cid and pid=:pid''',
         {"cid": cid, "pid": pid}
     )
-    config.connection.commit()
+    result = config.cursor.fetchone()
+
+    if result != None: return False
+    else:
+        config.cursor.execute(
+            '''INSERT INTO follows VALUES (:cid, :pid)''',
+            {"cid": cid, "pid": pid}
+        )
+        config.connection.commit()
+        return True
 
 def watch(sid: int, cid: str, mid: int) -> str:
     '''
