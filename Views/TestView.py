@@ -34,7 +34,7 @@ def test_view() -> str:
     # st.write(count_customer_watched(new_movie))
 
     # TESTING FOLLOW FUNCTION
-    # follow(cid='c100', pid='p004')
+    # print(follow(cid='c100', pid='p004'))
 
     # Testing watch and end watch functions
     # sid = 18
