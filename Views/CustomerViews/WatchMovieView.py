@@ -20,7 +20,7 @@ def watch_movie_view() -> str:
 
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
-    st.title('You are watching', movie.title)
+    st.title('You are watching', movie.get_title())
 
     if st.button('Stop watching'): 
         end_watch(cache.session.get_sid(), cache.user.get_cid(),
