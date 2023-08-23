@@ -33,6 +33,7 @@ def movie_info_view() -> str:
     cache.user = customer
     cache.user.set_selected_mid(10)
     # End of test
+    
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
     st.header(f'Movie title: {movie.get_title()}')
