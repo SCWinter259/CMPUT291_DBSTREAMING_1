@@ -1,6 +1,7 @@
 import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_cast, count_customer_watched, find_movie, end_session)
+from Models.Customer import Customer
 
 def movie_info_view() -> str:
     '''
@@ -27,19 +28,27 @@ def movie_info_view() -> str:
     '''
     st.title('Movie Information')
 
+    # This part is for testing
+    customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
+    cache.user = customer
+    cache.user.set_selected_mid(10)
+    # End of test
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
-    st.header('Movie title:', movie.get_title())
-    st.swrite(f'Release year: {movie.get_year()}/nDuration: {movie.get_runtime()}/nCast members:')
+    st.header(f'Movie title: {movie.get_title()}')
+    for a, b in zip(['Release year', 'Duration', 'Cast members'], 
+                    [movie.get_year(), movie.get_runtime(), '']):
+        st.write(f'{a}: {b}')
     movie_people_lists = find_cast(mid)
     for movie_people_list in movie_people_lists:
         movie_people, role = movie_people_list
-        st.write(f'{movie_people}: {role}')
-        if st.button(key=movie_people.get_pid(), label='Follow cast member'):
-            cache.user.set_sellected_pid(movie_people.get_pid())
-            return 'follow_cast_member_view'
+        st.write(f'{movie_people.get_name()}: {role}')
+
+    if st.button('Follow cast member'):
+        cache.user.set_sellected_pid(movie_people.get_pid())
+        return 'follow_cast_member_view'
         
-    st.write('Number of customers who have watched this movie:', count_customer_watched(movie))
+    st.write('Number of customers who have watched this movie:', str(count_customer_watched(movie)))
         
     if st.button('Watch movie'): return 'watch_movie_view'
 
