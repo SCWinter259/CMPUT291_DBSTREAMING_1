@@ -2,7 +2,6 @@ import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_movie, end_watch, end_session)
 from Models.Customer import Customer
-# from Models.Session import Session
 
 def watch_movie_view() -> str:
     '''
@@ -24,8 +23,6 @@ def watch_movie_view() -> str:
     customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
     cache.user = customer
     cache.user.set_selected_mid(10)
-    # session = Session(sid=1, cid='c100', stime='160')
-    # cache.session = session
     # End of test
 
     mid = cache.user.get_selected_mid()

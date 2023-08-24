@@ -29,7 +29,7 @@ def follow_cast_member_view() -> str:
     # This part is for testing
     customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
     cache.user = customer
-    cache.user.set_selected_mid(20)
+    cache.user.set_selected_mid(10)
     # End of test
     
     mid = cache.user.get_selected_mid()
