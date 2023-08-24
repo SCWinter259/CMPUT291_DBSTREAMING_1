@@ -45,9 +45,7 @@ def movie_info_view() -> str:
         movie_people, role = movie_people_list
         st.write(f'{movie_people.get_name()}: {role}')
 
-    if st.button('Follow cast member'):
-        cache.user.set_sellected_pid(movie_people.get_pid())
-        return 'follow_cast_member_view'
+    if st.button('Follow cast member'): return 'follow_cast_member_view'
         
     st.write('Number of customers who have watched this movie:', str(count_customer_watched(movie)))
         
