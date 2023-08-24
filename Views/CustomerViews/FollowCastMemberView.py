@@ -29,7 +29,7 @@ def follow_cast_member_view() -> str:
     # This part is for testing
     customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
     cache.user = customer
-    cache.user.set_selected_mid(10)
+    cache.user.set_selected_mid(20)
     # End of test
     
     mid = cache.user.get_selected_mid()
@@ -42,9 +42,10 @@ def follow_cast_member_view() -> str:
         st.write(f'{movie_people.get_name()}: {role}')
         if st.button(key=movie_people.get_pid(), label=f'Follow {movie_people.get_name()}'):
             if follow(customer.get_cid(), movie_people.get_pid()):
-                st.toast(f'You have successfully followed {movie_people.get_name()}!')
+                st.warning(f'You have successfully followed {movie_people.get_name()}!')
+                
             else:
-                st.toast(f'You have already followed {movie_people.get_name()}!')
+                st.warning(f'You have already followed {movie_people.get_name()}!')
 
     if st.button('Back'): return 'movie_info_view'
 
