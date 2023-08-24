@@ -32,9 +32,7 @@ def watch_movie_view() -> str:
     movie = find_movie(mid)
     st.title(f'You are watching {movie.get_title()}')
     
-    if st.session_state.get('stop_watching_button') != True:
-        st.session_state.search_button = st.button('Stop watching')
-    if st.session_state.get('stop_watching_button') == True:
+    if st.button('Stop watching'):
         end_watch(cache.session.get_sid(), cache.user.get_cid(),
                   cache.user.get_selected_mid(), cache.session.get_stime())
         cache.user.set_selected_mid(None)

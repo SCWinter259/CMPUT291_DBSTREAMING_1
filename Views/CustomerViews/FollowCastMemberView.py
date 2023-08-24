@@ -1,6 +1,6 @@
 import streamlit as st
 import cache
-from Controllers.QueryFunctions import (find_movie, find_cast, follow)
+from Controllers.QueryFunctions import (find_movie, find_cast, follow, end_session)
 from Models.Customer import Customer
 
 def follow_cast_member_view() -> str:
@@ -41,14 +41,12 @@ def follow_cast_member_view() -> str:
         movie_people, role = movie_people_list
         st.write(f'{movie_people.get_name()}: {role}')
         if st.button(key=movie_people.get_pid(), label=f'Follow {movie_people.get_name()}'):
-            cache.user.set_sellected_pid(movie_people.get_pid())
+            if follow(customer.get_cid(), movie_people.get_pid()):
+                st.toast(f'You have successfully followed {movie_people.get_name()}!')
+            else:
+                st.toast(f'You have already followed {movie_people.get_name()}!')
 
-        
-    st.write('Number of customers who have watched this movie:', str(count_customer_watched(movie)))
-        
-    if st.button('Watch movie'): return 'watch_movie_view'
-
-    if st.button('Back'): return 'movie_search_view'
+    if st.button('Back'): return 'movie_info_view'
 
     if st.button('Logout'):
         end_session(cache.session)
