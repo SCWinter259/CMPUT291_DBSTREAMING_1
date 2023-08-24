@@ -38,12 +38,12 @@ def movie_info_view() -> str:
     movie = find_movie(mid)
     st.header(f'Movie title: {movie.get_title()}')
     for a, b in zip(['Release year', 'Duration', 'Cast members'], 
-                    [movie.get_year(), movie.get_runtime(), '']):
+                    [movie.get_year(), f'{movie.get_runtime()} minutes', '']):
         st.write(f'{a}: {b}')
     movie_people_lists = find_cast(mid)
     for movie_people_list in movie_people_lists:
         movie_people, role = movie_people_list
-        st.write(f'{movie_people.get_name()}: {role}')
+        st.write(f'{movie_people.get_name()} as {role}')
 
     if st.button('Follow cast member'): return 'follow_cast_member_view'
         
