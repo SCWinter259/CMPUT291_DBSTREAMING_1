@@ -35,6 +35,7 @@ def follow_cast_member_view() -> str:
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
     st.header(f'Movie title: {movie.get_title()}')
+    
     st.write('Choose a cast member to follow:')
     movie_people_lists = find_cast(mid)
     for movie_people_list in movie_people_lists:
@@ -42,10 +43,9 @@ def follow_cast_member_view() -> str:
         st.write(f'{movie_people.get_name()}: {role}')
         if st.button(key=movie_people.get_pid(), label=f'Follow {movie_people.get_name()}'):
             if follow(customer.get_cid(), movie_people.get_pid()):
-                st.warning(f'You have successfully followed {movie_people.get_name()}!')
-                
+                st.toast(f'You have successfully followed {movie_people.get_name()}!')
             else:
-                st.warning(f'You have already followed {movie_people.get_name()}!')
+                st.toast(f'You have already followed {movie_people.get_name()}!')
 
     if st.button('Back'): return 'movie_info_view'
 
