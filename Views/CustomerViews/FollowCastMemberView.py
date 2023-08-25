@@ -1,3 +1,8 @@
+import streamlit as st
+import cache
+from Controllers.QueryFunctions import (find_movie, find_cast, follow, end_session)
+from Models.Customer import Customer
+
 def follow_cast_member_view() -> str:
     '''
     This view is for the user to choose a cast member to follow.
@@ -18,3 +23,28 @@ def follow_cast_member_view() -> str:
     You may want to use follow() and streamlit toast component (for the
     follow notification).
     '''
+
+    st.title('Follow cast member')
+    
+    mid = cache.user.get_selected_mid()
+    movie = find_movie(mid)
+    st.header(f'Movie title: {movie.get_title()}')
+
+    st.subheader('Choose a cast member to follow')
+    movie_people_lists = find_cast(mid)
+    for movie_people_list in movie_people_lists:
+        movie_people, role = movie_people_list
+        st.write(f'{movie_people.get_name()} as {role}')
+        if st.button(key=movie_people.get_pid(), label=f'Follow {movie_people.get_name()}'):
+            if follow(cache.user.get_cid(), movie_people.get_pid()):
+                st.toast(f'You have successfully followed {movie_people.get_name()}!')
+            else:
+                st.toast(f'You have already followed {movie_people.get_name()}!')
+
+    if st.button('Back'): return 'movie_info_view'
+
+    if st.button('Logout'):
+        end_session(cache.session)
+        cache.user = None
+        cache.session = None
+        return 'login_view'

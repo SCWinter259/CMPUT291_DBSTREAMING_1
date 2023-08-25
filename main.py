@@ -1,6 +1,7 @@
 import sqlite3
 import config
 import all_views
+import cache
 import streamlit as st
 from Controllers.SysStack import SysStack
 
@@ -19,6 +20,13 @@ def main():
     path = get_path()
     connect(path)    
 
+    frame = cache.view
+    print(frame)
+    print('cached user: ', cache.user)
+    print('cached session: ', cache.session)
+    
+    all_views.views[frame]()
+
     # UNCOMMENT THIS PART FOR ACTUAL PROGRAM
 
     # system = SysStack()
@@ -35,11 +43,11 @@ def main():
 
     # THIS PART IS FOR TESTING!!! COMMENT OUT IF YOU WANT THE ACTUAL PROGRAM
 
-    frame = "test_view"
-    # frame = 'movie_search_view'
-    frame = all_views.views[frame]
-    next_frame = frame()
-    print(next_frame)
+    # frame = "test_view"
+    # frame = 'follow_cast_member_view'
+    # frame = all_views.views[frame]
+    # next_frame = frame()
+    # print(next_frame)
 
 main()
 

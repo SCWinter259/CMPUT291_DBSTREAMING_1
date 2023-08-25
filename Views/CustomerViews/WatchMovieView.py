@@ -1,3 +1,7 @@
+import streamlit as st
+import cache
+from Controllers.QueryFunctions import (find_movie, end_watch, end_session)
+from Models.Customer import Customer
 
 def watch_movie_view() -> str:
     '''
@@ -14,3 +18,21 @@ def watch_movie_view() -> str:
 
     You may want to use end_watch(), end_session() functions.
     '''
+
+    mid = cache.user.get_selected_mid()
+    movie = find_movie(mid)
+    st.title(f'You are watching {movie.get_title()}')
+    
+    if st.button('Stop watching'):
+        end_watch(cache.session.get_sid(), cache.user.get_cid(),
+                  cache.user.get_selected_mid(), cache.session.get_stime())
+        cache.user.set_selected_mid(None)
+        return 'movie_search_view'
+    
+    if st.button('Logout'):
+        end_watch(cache.session.get_sid(), cache.user.get_cid(),
+                  cache.user.get_selected_mid(), cache.session.get_stime())
+        end_session(cache.session)
+        cache.user = None
+        cache.session = None
+        return 'login_view'

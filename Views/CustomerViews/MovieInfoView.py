@@ -1,3 +1,8 @@
+import streamlit as st
+import cache
+from Controllers.QueryFunctions import (find_cast, count_customer_watched, find_movie, end_session)
+from Models.Customer import Customer
+
 def movie_info_view() -> str:
     '''
     This view is for the customer to see imformation about the movie.
@@ -21,3 +26,29 @@ def movie_info_view() -> str:
 
     You may want to use find_cast(), count_customer_watched().
     '''
+    st.title('Movie Information')
+    
+    mid = cache.user.get_selected_mid()
+    movie = find_movie(mid)
+    st.header(f'Movie title: {movie.get_title()}')
+    for a, b in zip(['Release year', 'Duration', 'Cast members'], 
+                    [movie.get_year(), f'{movie.get_runtime()} minutes', '']):
+        st.write(f'{a}: {b}')
+    movie_people_lists = find_cast(mid)
+    for movie_people_list in movie_people_lists:
+        movie_people, role = movie_people_list
+        st.write(f'{movie_people.get_name()} as {role}')
+
+    if st.button('Follow cast member'): return 'follow_cast_member_view'
+        
+    st.write('Number of customers who have watched this movie:', str(count_customer_watched(movie)))
+        
+    if st.button('Watch movie'): return 'watch_movie_view'
+
+    if st.button('Back'): return 'movie_search_view'
+
+    if st.button('Logout'):
+        end_session(cache.session)
+        cache.user = None
+        cache.session = None
+        return 'login_view'
