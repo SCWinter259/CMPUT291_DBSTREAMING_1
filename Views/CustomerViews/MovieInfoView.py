@@ -27,12 +27,6 @@ def movie_info_view() -> str:
     You may want to use find_cast(), count_customer_watched().
     '''
     st.title('Movie Information')
-
-    # This part is for testing
-    customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
-    cache.user = customer
-    cache.user.set_selected_mid(10)
-    # End of test
     
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)

@@ -1,6 +1,7 @@
 import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_user, start_session)
+import time
 # This view should contain login and sign up
 def login_view() -> str:
     '''
@@ -22,7 +23,7 @@ def login_view() -> str:
 
     You may want to use find_user() and start_session() functions.
     '''
-
+    print('login viewwwww')
     st.title('Welcome to DB Streaming 1!')
 
     uid = st.text_input(label='ID')
@@ -33,14 +34,18 @@ def login_view() -> str:
 
     if st.button('Login'):
         user = find_user(uid, pwd)
-        if user == None: st.warning('Incorrect ID or password')     # failed login
-        else:   # successful login
-            cache.user = user
-            if cache.user.is_customer():    # if it is customer
-                session = start_session(cache.user)
-                cache.session = session
-                return 'movie_search_view'
-            else:       # if it is editor
-                return 'general_editor_view'
+        cache.user = user
+        if user == None: 
+            st.warning('Incorrect ID or password')     # failed login
+            time.sleep(1)
+        elif user.is_customer():
+            session = start_session(cache.user)
+            cache.session = session
+            cache.view = 'movie_search_view'
+        else:
+            cache.view = 'general_editor_view'
+        st.experimental_rerun()
 
-    if st.button('Register a new customer account'): return 'register_view'
+    if st.button('Register a new customer account'): 
+        cache.view = 'register_view'
+        st.experimental_rerun()

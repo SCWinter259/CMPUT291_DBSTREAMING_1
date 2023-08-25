@@ -25,12 +25,6 @@ def follow_cast_member_view() -> str:
     '''
 
     st.title('Follow cast member')
-
-    # This part is for testing
-    customer = Customer(cid='c100', name='Youssef Amer', pwd='ANGRY')
-    cache.user = customer
-    cache.user.set_selected_mid(10)
-    # End of test
     
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
@@ -42,7 +36,7 @@ def follow_cast_member_view() -> str:
         movie_people, role = movie_people_list
         st.write(f'{movie_people.get_name()} as {role}')
         if st.button(key=movie_people.get_pid(), label=f'Follow {movie_people.get_name()}'):
-            if follow(customer.get_cid(), movie_people.get_pid()):
+            if follow(cache.user.get_cid(), movie_people.get_pid()):
                 st.toast(f'You have successfully followed {movie_people.get_name()}!')
             else:
                 st.toast(f'You have already followed {movie_people.get_name()}!')
