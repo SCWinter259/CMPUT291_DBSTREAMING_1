@@ -107,5 +107,5 @@ def has_watched(cid: str, mid: int, runtime: int) -> bool:
 
     time_watched = config.cursor.fetchone()[0]
 
-    if time_watched / runtime > 0.5: return True
+    if time_watched != None and time_watched / runtime > 0.5: return True
     return False

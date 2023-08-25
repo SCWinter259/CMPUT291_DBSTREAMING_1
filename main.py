@@ -3,7 +3,6 @@ import config
 import all_views
 import cache
 import streamlit as st
-from Controllers.SysStack import SysStack
 
 def get_path():
     #path = input("Please enter your path: ")

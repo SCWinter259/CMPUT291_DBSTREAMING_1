@@ -34,6 +34,7 @@ def movie_search_view() -> str:
         cache.user = None
         cache.session = None
         cache.view = 'login_view'
+        st.experimental_rerun()
 
     text = st.text_input(label='Seach for a movie')
 
@@ -51,3 +52,4 @@ def movie_search_view() -> str:
                 if st.button(key=movie.get_mid(), label='More information'):
                     cache.user.set_selected_mid(movie.get_mid())
                     cache.view = 'movie_info_view'
+                    st.experimental_rerun()
