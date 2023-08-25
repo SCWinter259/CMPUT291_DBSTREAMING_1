@@ -1,6 +1,6 @@
 import streamlit as st
 import cache
-from Controllers.QueryFunctions import (find_movie, end_watch, end_session)
+from Controllers.QueryFunctions import (find_movie, watch, end_watch, end_session)
 
 def watch_movie_view() -> str:
     '''
@@ -21,18 +21,19 @@ def watch_movie_view() -> str:
     mid = cache.user.get_selected_mid()
     movie = find_movie(mid)
     st.title(f'You are watching {movie.get_title()}')
+
+    start_time = watch(cache.session.get_sid(), cache.user.get_cid(), cache.user.get_selected_mid())
     
     if st.button('Stop watching'):
-        end_watch(cache.session.get_sid(), cache.user.get_cid(),
-                  cache.user.get_selected_mid(), cache.session.get_stime())
+        end_watch(cache.session.get_sid(), cache.user.get_cid(), cache.user.get_selected_mid(), start_time)
         cache.user.set_selected_mid(None)
         cache.view = 'movie_search_view'
         st.experimental_rerun()
     
     if st.button('Logout'):
-        end_watch(cache.session.get_sid(), cache.user.get_cid(),
-                  cache.user.get_selected_mid(), cache.session.get_stime())
+        end_watch(cache.session.get_sid(), cache.user.get_cid(), cache.user.get_selected_mid(), start_time)
         end_session(cache.session)
         cache.user = None
         cache.session = None
         cache.view = 'login_view'
+        st.experimental_rerun()
