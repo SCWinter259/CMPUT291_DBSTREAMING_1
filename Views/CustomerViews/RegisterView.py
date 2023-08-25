@@ -1,5 +1,7 @@
 import streamlit as st
 from Controllers.QueryFunctions import (find_customer, find_editor, register_customer)
+import cache
+import time
 
 def register_view() -> str:
     '''
@@ -33,6 +35,7 @@ def register_view() -> str:
     if st.button('Register'):
         if find_customer(uid) != None or find_editor(uid) != None: 
             st.warning('Please choose a different ID. This one is already registerd')
+            time.sleep(1)
         elif len(uid) == 0 or len(name) == 0 or len(pwd) == 0:
             st.warning(
                 '''
@@ -41,6 +44,8 @@ def register_view() -> str:
                 A valid ID, password, or Username is one that contains characters, not just white space.
                 '''
             )
+            time.sleep(3)
         else:
             register_customer(uid, name, pwd)
-            return "login_view"
+            cache.view = 'login_view'
+        st.experimental_rerun()
