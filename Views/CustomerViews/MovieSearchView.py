@@ -26,7 +26,7 @@ def movie_search_view() -> str:
     return 'login_view'.
 
     You may want to use search(), end_session() functions.
-    '''
+    '''    
     st.title('Search for a movie')
 
     if st.button('Logout'):
