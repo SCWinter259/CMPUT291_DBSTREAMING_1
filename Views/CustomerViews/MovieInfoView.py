@@ -50,6 +50,7 @@ def movie_info_view() -> str:
 
     if st.button('Back'): 
         cache.view = 'movie_search_view'
+        st.session_state.search_button = False
         st.experimental_rerun()
 
     if st.button('Logout'):
