@@ -20,36 +20,7 @@ def main():
     connect(path)    
 
     frame = cache.view
-    print(frame)
-    print('cached user: ', cache.user)
-    print('cached session: ', cache.session)
     
     all_views.views[frame]()
 
-    # UNCOMMENT THIS PART FOR ACTUAL PROGRAM
-
-    # system = SysStack()
-    # frame = "login_view"
-    # system.control(frame)
-    # print(system.see_stack())
-
-    # while system.peek() != None and system.peek() != 'exit':
-    #     frame = all_views.views[system.peek()]
-    #     next_frame = frame()
-    #     system.control(next_frame)
-
-    # END
-
-    # THIS PART IS FOR TESTING!!! COMMENT OUT IF YOU WANT THE ACTUAL PROGRAM
-
-    # frame = "test_view"
-    # frame = 'follow_cast_member_view'
-    # frame = all_views.views[frame]
-    # next_frame = frame()
-    # print(next_frame)
-
 main()
-
-# to recreate the database:
-# sqlite3 [db name] < prj-tables.sql
-# sqlite3 [db name] < project1_data.sql

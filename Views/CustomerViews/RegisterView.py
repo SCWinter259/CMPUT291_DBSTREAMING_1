@@ -3,7 +3,7 @@ from Controllers.QueryFunctions import (find_customer, find_editor, register_cus
 import cache
 import time
 
-def register_view() -> str:
+def register_view() -> None:
     '''
     This view is for registering a new customer account.
 

@@ -3,7 +3,7 @@ import cache
 from Controllers.QueryFunctions import (find_user, start_session)
 import time
 # This view should contain login and sign up
-def login_view() -> str:
+def login_view() -> None:
     '''
     This view is for a customer login.
 
@@ -23,7 +23,6 @@ def login_view() -> str:
 
     You may want to use find_user() and start_session() functions.
     '''
-    print('login viewwwww')
     st.title('Welcome to DB Streaming 1!')
 
     uid = st.text_input(label='ID')

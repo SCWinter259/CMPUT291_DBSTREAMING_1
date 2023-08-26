@@ -1,7 +1,7 @@
 from typing import Union
 import config
 from Controllers.HelperFunctions import (
-    _chop, _search_title, _search_member_name, _search_member_role, has_watched)
+    _chop, _search_title, _search_member_name, _search_member_role, has_watched, _check_watch)
 from Models.Customer import Customer
 from Models.Editor import Editor
 from Models.Session import Session
@@ -281,16 +281,19 @@ def follow(cid: str, pid: str) -> None:
 def watch(sid: int, cid: str, mid: int) -> str:
     '''
     This function helps the customer to start watching a movie.
+    If the user already watched the movie in that session, then no value
+    is inserted.
     We would write into the watch table the current session id and
     customer id (taken from cache file), the mid of the movie being watched,
     and duration as NULL.
     This function returns the start time of the watch, which is a string
     '''
-    config.cursor.execute(
-        '''INSERT INTO watch VALUES (:sid, :cid, :mid, NULL)''',
-        {"sid": sid, "cid": cid, "mid": mid}
-    )
-    config.connection.commit()
+    if _check_watch(sid=sid, cid=cid, mid=mid) == 'No entry found':    # if the movie has not been watched in that session
+        config.cursor.execute(
+            '''INSERT INTO watch VALUES (:sid, :cid, :mid, NULL)''',
+            {"sid": sid, "cid": cid, "mid": mid}
+        )
+        config.connection.commit()
 
     config.cursor.execute("SELECT datetime('now')")
     stime = config.cursor.fetchone()      # get the appropriate stime
@@ -311,6 +314,11 @@ def end_watch(sid: int, cid: str, mid: int, stime: str) -> None:
     )
     duration = config.cursor.fetchone()
     duration = duration[0]
+
+    # if in the same session and with the same movie, the user has watched
+    # for some time, we shall add the duration
+    recorded_duration = _check_watch(sid=sid, cid=cid, mid=mid)
+    if type(recorded_duration) == int: duration += recorded_duration
 
     # update the duration column
     config.cursor.execute(

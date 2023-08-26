@@ -2,7 +2,7 @@ import streamlit as st
 import cache
 from Controllers.QueryFunctions import (search, end_session)
 
-def movie_search_view() -> str:
+def movie_search_view() -> None:
     '''
     This view is for the customer to search for a movie.
 

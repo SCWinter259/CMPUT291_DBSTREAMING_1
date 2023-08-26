@@ -2,7 +2,7 @@ import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_cast, count_customer_watched, find_movie, end_session)
 
-def movie_info_view() -> str:
+def movie_info_view() -> None:
     '''
     This view is for the customer to see imformation about the movie.
 

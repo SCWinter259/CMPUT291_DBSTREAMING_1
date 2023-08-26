@@ -2,7 +2,7 @@ import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_movie, watch, end_watch, end_session)
 
-def watch_movie_view() -> str:
+def watch_movie_view() -> None:
     '''
     This view is to show the customer that they are watching a movie.
 
@@ -28,6 +28,7 @@ def watch_movie_view() -> str:
         end_watch(cache.session.get_sid(), cache.user.get_cid(), cache.user.get_selected_mid(), start_time)
         cache.user.set_selected_mid(None)
         cache.view = 'movie_search_view'
+        st.session_state.search_button = False
         st.experimental_rerun()
     
     if st.button('Logout'):

@@ -109,3 +109,18 @@ def has_watched(cid: str, mid: int, runtime: int) -> bool:
 
     if time_watched != None and time_watched / runtime > 0.5: return True
     return False
+
+def _check_watch(sid: int, cid: str, mid: int) -> Union[str, int, None]:
+    '''
+    This function checks if the combo (sid, cid, mid) already existed in 
+    the watch table. If not, it returns False. If yes, it returns the
+    duration value (either a number of None)
+    '''
+    config.cursor.execute(
+        '''SELECT duration FROM watch WHERE sid=:sid AND cid=:cid AND mid=:mid''',
+        {"sid": sid, "cid": cid, "mid": mid}
+    )
+    result = config.cursor.fetchone()
+
+    if result == None: return 'No entry found'
+    return result[0]
