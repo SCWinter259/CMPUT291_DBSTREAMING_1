@@ -2,7 +2,7 @@ import streamlit as st
 import cache
 from Controllers.QueryFunctions import (find_movie, find_cast, follow, end_session)
 
-def follow_cast_member_view() -> str:
+def follow_cast_member_view() -> None:
     '''
     This view is for the user to choose a cast member to follow.
 
