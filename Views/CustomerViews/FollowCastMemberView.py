@@ -48,3 +48,4 @@ def follow_cast_member_view() -> str:
         cache.user = None
         cache.session = None
         cache.view = 'login_view'
+        st.experimental_rerun()

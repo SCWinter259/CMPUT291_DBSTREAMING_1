@@ -58,3 +58,4 @@ def movie_info_view() -> str:
         cache.user = None
         cache.session = None
         cache.view = 'login_view'
+        st.experimental_rerun()
