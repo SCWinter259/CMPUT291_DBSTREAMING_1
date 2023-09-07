@@ -2,11 +2,9 @@ import sqlite3
 import config
 import all_views
 import cache
-import streamlit as st
 
 def get_path():
-    #path = input("Please enter your path: ")
-    path = "./test.db"
+    path = "./data/test.db"
     return path
 
 def connect(path):
