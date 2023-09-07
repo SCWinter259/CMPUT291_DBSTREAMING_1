@@ -47,5 +47,6 @@ def follow_cast_member_view() -> None:
         end_session(cache.session)
         cache.user = None
         cache.session = None
+        st.session_state.search_button = False
         cache.view = 'login_view'
         st.experimental_rerun()
